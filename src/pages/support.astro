@@ -50,7 +50,29 @@ import { site, url } from '../site';
         <p>
           The Mac App Store version opens SSH hosts as ssh:// links, and Terminal asks you to confirm links from other
           apps when the host isn’t in <code>~/.ssh/known_hosts</code>. Click Allow. iTerm2 doesn’t ask; you can switch to
-          it in Settings › General. The direct download runs the command in Terminal itself, so there’s no question.
+          it in Settings › General. With the HostDeck Terminal Script (see below), and in the direct download, HostDeck
+          runs the command in Terminal itself, so there’s no question.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Can the Mac App Store version run any command, not just SSH hosts?</summary>
+      <div>
+        <p>
+          Yes, with the optional HostDeck Terminal Script. Apple’s rules don’t let an App Store app control Terminal by
+          itself, but it may run a script you add to its Scripts folder. HostDeck includes one, as plain AppleScript you
+          can read and change.
+        </p>
+        <ol>
+          <li>Choose Settings… from the HostDeck menu and open the Access tab.</li>
+          <li>Click Open Scripts Folder, then drag the script shown in Settings into that folder.</li>
+          <li>The first time a command runs, macOS asks whether HostDeck may control Terminal. Click OK.</li>
+        </ol>
+        <p>
+          From then on every command runs in Terminal or iTerm2, with the profile and title you chose. iTerm2 opens new
+          tabs; Terminal opens new windows, because it has no scripting command for tabs. To stop using the script, move
+          it from the Scripts folder to the Bin.
         </p>
       </div>
     </details>
