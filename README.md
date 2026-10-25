@@ -2,7 +2,7 @@
 
 The website for [HostDeck](https://bilal-othi.github.io/hostdeck-website/), a menu bar app for macOS that keeps SSH
 hosts, file-transfer servers and commands one shortcut away. Built with [Astro](https://astro.build) and published to
-GitHub Pages. The app itself lives in a separate repository (`hostdeck-macos`).
+GitHub Pages. The app itself lives in a separate, private repository (`hostdeck`).
 
 ## Working on it
 
