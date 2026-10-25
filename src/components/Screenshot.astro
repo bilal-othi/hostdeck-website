@@ -1,0 +1,49 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * A screenshot of the app in light and dark appearance (the visitor's setting picks one), converted to WebP at 1×
+ * and 2× sizes. The PNGs come from the app repository's scripts/make-screenshots.sh.
+ */
+interface Props {
+  /** File name without "-light.png" / "-dark.png" */
+  name: string;
+  alt: string;
+  /** Width on the page in CSS pixels */
+  width: number;
+  class?: string;
+}
+
+const { name, alt, width, class: className } = Astro.props;
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/screenshots/*.png', { eager: true });
+
+function file(appearance: 'light' | 'dark'): ImageMetadata {
+  const found = files[`../assets/screenshots/${name}-${appearance}.png`];
+  if (!found) throw new Error(`Missing screenshot ${name}-${appearance}.png`);
+  return found.default;
+}
+
+const light = file('light');
+const dark = file('dark');
+const height = Math.round((light.height / light.width) * width);
+const widths = [width, Math.min(width * 2, light.width)];
+const sizes = `(max-width: ${width + 40}px) calc(100vw - 40px), ${width}px`;
+const [lightImage, darkImage] = await Promise.all(
+  [light, dark].map((src) => getImage({ src, widths, format: 'webp', quality: 85 })),
+);
+---
+
+<picture class={className}>
+  <source media="(prefers-color-scheme: dark)" srcset={darkImage.srcSet.attribute} sizes={sizes} type="image/webp" />
+  <img
+    src={lightImage.src}
+    srcset={lightImage.srcSet.attribute}
+    sizes={sizes}
+    width={width}
+    height={height}
+    alt={alt}
+    loading="lazy"
+    decoding="async"
+  />
+</picture>

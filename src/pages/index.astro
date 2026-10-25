@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 import MenuMock from '../components/MenuMock.astro';
+import Screenshot from '../components/Screenshot.astro';
 import { site, url } from '../site';
 
 const features: { icon: IconName; title: string; text: string }[] = [
@@ -95,11 +96,121 @@ const features: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
+  <section class="section" id="tour">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">A closer look</span>
+        <h2>Built for the way you really work.</h2>
+        <p>Real screenshots of HostDeck, filled with sample hosts.</p>
+      </div>
+
+      <div class="tour">
+        <article class="tour-row">
+          <div class="tour-media">
+            <Screenshot name="menu" width={300} alt="The HostDeck menu: a search field, three Favourites with ⌘1 to ⌘3, two Recent hosts, and folders for Clients, Home lab, Production and Staging with coloured labels." />
+          </div>
+          <div class="tour-text">
+            <h3>Every server you use, in one menu.</h3>
+            <p>
+              Click the icon in the menu bar, or press <kbd>⌃⌥⌘S</kbd> in any app. Your favourites sit at the top on
+              <kbd>⌘1</kbd> to <kbd>⌘9</kbd>, the hosts you just used come next, and everything else lives in folders, with
+              a coloured dot for Production, Staging and Development.
+            </p>
+            <ul class="checklist">
+              <li><Icon name="check" size={20} /><span>No more digging through notes for an address, a user name or a port.</span></li>
+              <li><Icon name="check" size={20} /><span>No more retyping long ssh commands: click, and it opens in your terminal.</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="tour-row flip">
+          <div class="tour-media">
+            <Screenshot name="search" width={300} alt="Searching for prod in HostDeck: four Production hosts listed, the first one highlighted." />
+          </div>
+          <div class="tour-text">
+            <h3>Type a few letters, press Return.</h3>
+            <p>
+              Search looks at names, folders, addresses and labels. It understands abbreviations (“pdb” finds prod-db),
+              forgives small typos, and lists the hosts you use most first. Type “prod” to see every Production host at
+              once.
+            </p>
+            <p>
+              Not saved yet? Type <code>pi@192.168.1.20</code> or <code>host.example.com:2222</code> and HostDeck offers
+              to connect straight away, or to save it as a host.
+            </p>
+          </div>
+        </article>
+
+        <article class="tour-row">
+          <div class="tour-media">
+            <Screenshot name="production" width={260} alt="A HostDeck dialog asking: Open db-primary in Production? with Open and Cancel buttons; Cancel is the default." />
+          </div>
+          <div class="tour-text">
+            <h3>Never open Production by accident.</h3>
+            <p>
+              Label a host, or a whole folder, as Production. Before it opens, HostDeck asks, or asks for Touch ID if you
+              prefer. Return and Escape both mean Cancel, so muscle memory can’t open it for you.
+            </p>
+            <p>Hosts in your <code>~/.ssh/config</code> get labels too, with a one-line comment.</p>
+          </div>
+        </article>
+
+        <article class="tour-row wide flip">
+          <div class="tour-media">
+            <Screenshot name="editor" width={620} alt="The Manage Hosts window: folders of hosts on the left with labels and favourite stars, and the selected host's name, command and options on the right." />
+          </div>
+          <div class="tour-text">
+            <h3>Manage hosts without touching JSON.</h3>
+            <p>
+              Add, edit, move and label hosts in a proper window, with undo. Every change is saved automatically, with
+              backups.
+            </p>
+            <p>
+              The file stays Shuttle-compatible, so you can still edit it by hand, keep it in Dropbox, or share it with
+              your team.
+            </p>
+          </div>
+        </article>
+
+        <article class="tour-row wide">
+          <div class="tour-media stacked">
+            <Screenshot name="file-transfer" width={620} alt="Manage Hosts with a file-transfer host selected: protocol SFTP, server files.example.com, user media, folder /srv/media." />
+            <Screenshot class="overlay" name="quick-actions" width={300} alt="The quick actions of a host: Browse Files (SFTP), Copy Command, Copy Address, Remove from Favourites and Edit." />
+          </div>
+          <div class="tour-text">
+            <h3>Files, one click away.</h3>
+            <p>
+              Keep SFTP, FTPS and FTP servers next to your SSH hosts. They open in the app you already use: FileZilla,
+              Transmit, Cyberduck or ForkLift.
+            </p>
+            <p>
+              Hold <kbd>⌥</kbd> on any SSH host for its quick actions: browse its files over SFTP, copy its command or
+              address, add it to Favourites or edit it.
+            </p>
+          </div>
+        </article>
+
+        <article class="tour-row flip">
+          <div class="tour-media">
+            <Screenshot name="settings" width={440} alt="HostDeck Settings: open commands with iTerm2 in a new tab, file transfers with FileZilla, the global shortcut, and asking before opening Production hosts." />
+          </div>
+          <div class="tour-text">
+            <h3>Set it up your way.</h3>
+            <p>
+              Terminal or iTerm2, new tabs or new windows, the profile each host opens with, your own global shortcut,
+              and which app handles file transfers. HostDeck fits around the tools you already have.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="section soft" id="features">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Features</span>
-        <h2>Less typing, fewer wrong servers.</h2>
+        <h2>All the details that make it fast.</h2>
         <p>Everything you connect to, organised the way you think about it, and never more than a keystroke away.</p>
       </div>
       <div class="features">
