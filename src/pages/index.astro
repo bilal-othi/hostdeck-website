@@ -1,0 +1,235 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon, { type IconName } from '../components/Icon.astro';
+import MenuMock from '../components/MenuMock.astro';
+import { site, url } from '../site';
+
+const features: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'search',
+    title: 'Search as you type',
+    text: 'A few letters find the host: ranked results, abbreviations ("pdb" finds prod-db) and small typos, with the hosts you use most first. Return connects.',
+  },
+  {
+    icon: 'command',
+    title: 'One shortcut, any app',
+    text: 'Open the menu from anywhere with ⌃⌥⌘S, or a shortcut of your own. Your first nine favourites are on ⌘1 to ⌘9.',
+  },
+  {
+    icon: 'config',
+    title: 'Your ~/.ssh/config, included',
+    text: 'Hosts from your SSH config appear with their real address, Include files and all. A comment puts them in folders or labels them.',
+  },
+  {
+    icon: 'shield',
+    title: 'Production asks first',
+    text: 'Label hosts Production, Staging or Development, by host or by folder. Production asks before it opens, with Touch ID if you like.',
+  },
+  {
+    icon: 'transfer',
+    title: 'Files, not just shells',
+    text: 'SFTP, FTPS and FTP hosts open in Transmit, Cyberduck, ForkLift or FileZilla. Any SSH host’s files are one click away with Browse Files.',
+  },
+  {
+    icon: 'bolt',
+    title: 'Quick Connect',
+    text: 'Type pi@192.168.1.20 or host.example.com:2222 into the search to connect straight away, or save it as a host in one step.',
+  },
+  {
+    icon: 'star',
+    title: 'Favourites and Recent',
+    text: 'Pin the hosts you use every day to the top of the menu. The last five you opened are always there too.',
+  },
+  {
+    icon: 'option',
+    title: 'Hold ⌥ for more',
+    text: 'Hold Option on any host to copy its command or address, browse its files, add it to Favourites or edit it.',
+  },
+  {
+    icon: 'terminal',
+    title: 'Terminal or iTerm2',
+    text: 'Hosts open in the terminal you prefer. The direct download also picks a new tab or window, the profile and the window title.',
+  },
+];
+---
+
+<Base>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <img class="hero-icon" src={url('app-icon.png')} alt="HostDeck app icon" width="84" height="84" />
+        <h1>Every server,<br /><span class="gradient-text">one shortcut away.</span></h1>
+        <p class="lede">
+          HostDeck lives in your Mac’s menu bar and keeps your SSH hosts, file-transfer servers and everyday commands one
+          click, or one keystroke, away.
+        </p>
+        <div class="buttons">
+          {
+            site.downloadUrl ? (
+              <a class="button primary" href={site.downloadUrl}>
+                <Icon name="download" size={20} /> Download for Mac
+              </a>
+            ) : (
+              <span class="button primary" aria-disabled="true">
+                <Icon name="download" size={20} /> Coming soon
+              </span>
+            )
+          }
+          {
+            site.appStoreUrl ? (
+              <a class="button secondary" href={site.appStoreUrl}>
+                <Icon name="bag" size={20} /> Mac App Store
+              </a>
+            ) : (
+              <span class="button disabled" aria-disabled="true">
+                <Icon name="bag" size={20} /> Mac App Store, soon
+              </span>
+            )
+          }
+        </div>
+        <p class="fine-print">
+          {site.requirements}. {!site.downloadUrl && <>Watch the <a href={site.releasesUrl}>releases</a> to hear when it’s out.</>}
+        </p>
+      </div>
+      <MenuMock />
+    </div>
+  </section>
+
+  <section class="section soft" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2>Less typing, fewer wrong servers.</h2>
+        <p>Everything you connect to, organised the way you think about it, and never more than a keystroke away.</p>
+      </div>
+      <div class="features">
+        {
+          features.map((feature) => (
+            <article class="feature">
+              <div class="feature-icon">
+                <Icon name={feature.icon} size={22} />
+              </div>
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="shuttle">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Coming from Shuttle?</span>
+        <h2 class="section-title">Your hosts move with you.</h2>
+        <p class="lede">
+          HostDeck is a modern rewrite of Shuttle, the much-loved SSH menu that is no longer maintained. It reads
+          Shuttle’s config as it is.
+        </p>
+        <ul class="checklist">
+          <li><Icon name="check" size={20} /><span>Imports <code>~/.shuttle.json</code> with your folders, themes and shortcut (the direct download does it on first launch).</span></li>
+          <li><Icon name="check" size={20} /><span>Keeps the file Shuttle-compatible: edit it in HostDeck or by hand.</span></li>
+          <li><Icon name="check" size={20} /><span>Adds an editor window, so you never have to touch the JSON again.</span></li>
+        </ul>
+      </div>
+      <pre class="code" aria-label="An example hosts file"><code><span class="c">// The same file Shuttle reads</span>
+&#123;
+  <span class="k">"terminal"</span>: <span class="s">"iTerm"</span>,
+  <span class="k">"hosts"</span>: [
+    &#123; <span class="k">"Production"</span>: [
+      &#123; <span class="k">"name"</span>: <span class="s">"web-01"</span>,
+        <span class="k">"cmd"</span>: <span class="s">"ssh deploy@web-01.example.com"</span> &#125;
+    ] &#125;,
+    &#123; <span class="k">"name"</span>: <span class="s">"Media files"</span>,
+      <span class="k">"cmd"</span>: <span class="s">"sftp://media@files.example.com/srv"</span> &#125;
+  ]
+&#125;</code></pre>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Privacy</span>
+        <h2>Your servers stay your business.</h2>
+        <p>HostDeck works entirely on your Mac. <a href={url('privacy/')}>Read the privacy policy</a>.</p>
+      </div>
+      <div class="promises">
+        <div class="promise">
+          <Icon name="user" size={26} />
+          <div>
+            <h3>No account</h3>
+            <p>Nothing to sign up for. Your hosts are a file on your Mac.</p>
+          </div>
+        </div>
+        <div class="promise">
+          <Icon name="eye" size={26} />
+          <div>
+            <h3>No tracking</h3>
+            <p>No analytics, no advertising, and no network connections of its own.</p>
+          </div>
+        </div>
+        <div class="promise">
+          <Icon name="key" size={26} />
+          <div>
+            <h3>No passwords stored</h3>
+            <p>Your SSH keys and your file-transfer app handle sign-in, as they do today.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Two editions</span>
+        <h2>Pick the one that fits.</h2>
+        <p>Both have the same menu, search, editor and labels. They differ in how they hand commands to your terminal.</p>
+      </div>
+      <div class="editions">
+        <article class="edition">
+          <h3><Icon name="bag" size={24} /> Mac App Store</h3>
+          <p class="note">Sandboxed, reviewed by Apple, updated automatically.</p>
+          <ul>
+            <li>SSH hosts open in Terminal or iTerm2 as ssh:// links.</li>
+            <li>Other commands are copied, ready to paste.</li>
+            <li>Reads ~/.ssh/config once you allow it.</li>
+          </ul>
+        </article>
+        <article class="edition">
+          <h3><Icon name="download" size={24} /> Direct download</h3>
+          <p class="note">Signed, and notarized by Apple.</p>
+          <ul>
+            <li>Runs any command in Terminal or iTerm2.</li>
+            <li>New tab, new window or current window, with your profile and title.</li>
+            <li>Imports your Shuttle config on first launch.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <img src={url('app-icon.png')} alt="" width="96" height="96" />
+      <h2>Ready when your servers are.</h2>
+      <p>{site.requirements}.</p>
+      <div class="buttons">
+        {
+          site.downloadUrl ? (
+            <a class="button primary" href={site.downloadUrl}>
+              <Icon name="download" size={20} /> Download for Mac
+            </a>
+          ) : (
+            <a class="button primary" href={site.releasesUrl}>
+              <Icon name="github" size={20} /> Watch for the release
+            </a>
+          )
+        }
+        <a class="button secondary" href={url('support/')}>Questions? Support</a>
+      </div>
+    </div>
+  </section>
+</Base>

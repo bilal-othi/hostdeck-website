@@ -1,0 +1,117 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site, url } from '../site';
+---
+
+<Prose title="Support" description="Answers to common questions about HostDeck, and how to get help.">
+  <p>Answers to the questions people ask most. Can’t find yours? <a href={site.supportUrl}>Ask on GitHub</a>.</p>
+
+  <div class="faq">
+    <details>
+      <summary>How do I open HostDeck?</summary>
+      <div>
+        <p>
+          Click its icon in the menu bar (a small stack of cards), or press <kbd>⌃⌥⌘S</kbd> from any app. You can change
+          the shortcut, or turn it off, in Settings › General. In the menu, start typing to search, and press Return to
+          open the top result.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Where are my hosts saved?</summary>
+      <div>
+        <p>In a single file on your Mac, with automatic backups next to it in a <code>Backups</code> folder:</p>
+        <ul>
+          <li>Direct download: <code>~/Library/Application Support/HostDeck/hosts.json</code></li>
+          <li>
+            Mac App Store:
+            <code>~/Library/Containers/net.othi.hostdeck/Data/Library/Application Support/HostDeck/hosts.json</code>
+          </li>
+        </ul>
+        <p>Settings › Config File shows the file, and can import or export it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>I used Shuttle. Can I bring my hosts?</summary>
+      <div>
+        <p>
+          Yes. The direct download imports <code>~/.shuttle.json</code> on first launch, keeping Shuttle’s ⌥⌘S shortcut.
+          In the Mac App Store version, use Settings › Config File › Import and choose the file. The format stays
+          Shuttle’s, so the file still works with Shuttle too.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Why does Terminal ask before connecting?</summary>
+      <div>
+        <p>
+          The Mac App Store version opens SSH hosts as ssh:// links, and Terminal asks you to confirm links from other
+          apps when the host isn’t in <code>~/.ssh/known_hosts</code>. Click Allow. iTerm2 doesn’t ask; you can switch to
+          it in Settings › General. The direct download runs the command in Terminal itself, so there’s no question.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I show the hosts from my ~/.ssh/config?</summary>
+      <div>
+        <p>
+          Turn on “Show hosts from ~/.ssh/config” in Settings › General. The Mac App Store version asks you once to allow
+          access to your <code>.ssh</code> folder.
+        </p>
+        <p>
+          To organise them, add a comment on a line under a <code>Host</code> line: <code># hostdeck.name Folder/Name</code>
+          puts the host in a folder, and <code># hostdeck.environment prod</code> labels it Production.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How do Production labels work?</summary>
+      <div>
+        <p>
+          In Manage Hosts, give a host or a whole folder the Production, Staging or Development label. Labelled hosts get
+          a coloured dot. In Settings › General › Production hosts, choose what happens before a Production host opens:
+          ask to confirm, require Touch ID or your password, or nothing.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Which apps open SFTP and FTP hosts?</summary>
+      <div>
+        <p>
+          In Manage Hosts, choose Type › File transfer and enter the server. HostDeck opens it in Transmit, ForkLift,
+          Cyberduck, Mountain Duck, Commander One or FileZilla, or Finder for FTP downloads. Pick one in Settings ›
+          General › File transfer, or let HostDeck choose. To browse an SSH host’s files, hold ⌥ on it in the menu and choose
+          Browse Files (SFTP).
+        </p>
+        <p>
+          The free FileZilla client doesn’t accept links from other apps, so the direct download starts FileZilla with the
+          address, and the Mac App Store version copies the link for FileZilla’s Quickconnect bar.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Does HostDeck store my passwords?</summary>
+      <div>
+        <p>
+          No. ssh signs in with your keys or asks for a password itself, and file-transfer apps keep passwords in their
+          own keychain. See the <a href={url('privacy/')}>privacy policy</a>.
+        </p>
+      </div>
+    </details>
+  </div>
+
+  <div class="contact">
+    <h2>Still stuck?</h2>
+    <p>
+      <a href={site.supportUrl}>Open an issue on GitHub</a>. Mention your macOS version and HostDeck version (HostDeck menu
+      › About HostDeck), and which edition you use.
+    </p>
+  </div>
+</Prose>

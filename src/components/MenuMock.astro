@@ -1,0 +1,72 @@
+---
+import MenuBarIcon from './MenuBarIcon.astro';
+
+/** The HostDeck menu as it looks open in the menu bar: an illustration in HTML, sharp at any size and in dark mode. */
+const server = '<rect x="3" y="4" width="18" height="6.5" rx="1.6"/><rect x="3" y="13.5" width="18" height="6.5" rx="1.6"/><path d="M7 7.2h.01M7 16.8h.01"/>';
+const folder = '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>';
+const transfer = '<circle cx="12" cy="12" r="9"/><path d="M9.5 16.5v-9M7 10l2.5-2.5L12 10M14.5 7.5v9M12 14l2.5 2.5L17 14"/>';
+const search = '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/>';
+const gear = '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>';
+const list = '<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>';
+
+type Row =
+  | { kind: 'header'; text: string }
+  | { kind: 'separator' }
+  | { kind: 'item'; icon: string; name: string; path?: string; dot?: 'prod' | 'staging' | 'dev'; key?: string; selected?: boolean; submenu?: boolean };
+
+const rows: Row[] = [
+  { kind: 'header', text: 'Favourites' },
+  { kind: 'item', icon: server, name: 'web-01', path: 'Production', dot: 'prod', key: '⌘1' },
+  { kind: 'item', icon: server, name: 'db-primary', path: 'Production', dot: 'prod', key: '⌘2', selected: true },
+  { kind: 'item', icon: server, name: 'api', path: 'Staging', dot: 'staging', key: '⌘3' },
+  { kind: 'separator' },
+  { kind: 'header', text: 'Recent' },
+  { kind: 'item', icon: server, name: 'pi@192.168.1.20' },
+  { kind: 'item', icon: transfer, name: 'Media files', path: 'Clients' },
+  { kind: 'separator' },
+  { kind: 'item', icon: folder, name: 'Production', dot: 'prod', submenu: true },
+  { kind: 'item', icon: folder, name: 'Staging', dot: 'staging', submenu: true },
+  { kind: 'item', icon: folder, name: 'Clients', submenu: true },
+  { kind: 'separator' },
+  { kind: 'item', icon: list, name: 'Manage Hosts…', key: '⌘E' },
+  { kind: 'item', icon: gear, name: 'Settings…', key: '⌘,' },
+];
+---
+
+<figure class="mock" aria-label="The HostDeck menu, open in the macOS menu bar">
+  <div class="mock-desktop">
+    <div class="mock-menubar">
+      <span class="mock-status active"><MenuBarIcon size={16} /></span>
+      <span class="mock-status" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01M1.5 9a15 15 0 0 1 21 0"/></svg>
+      </span>
+      <span class="mock-status" aria-hidden="true">
+        <svg width="22" height="16" viewBox="0 0 30 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="2.5" width="24" height="11" rx="3"/><rect x="3.5" y="5" width="15" height="6" rx="1.2" fill="currentColor" stroke="none"/><path d="M27.5 6.5v3" stroke-linecap="round"/></svg>
+      </span>
+      <span class="mock-clock">Sun 25 Oct&nbsp;&nbsp;9:41</span>
+    </div>
+    <div class="mock-menu" role="presentation">
+      <div class="mock-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" set:html={search} />
+        <span>Search hosts and commands</span>
+      </div>
+      {
+        rows.map((row) => {
+          if (row.kind === 'header') return <div class="mock-header">{row.text}</div>;
+          if (row.kind === 'separator') return <div class="mock-separator" />;
+          return (
+            <div class:list={['mock-item', { selected: row.selected }]}>
+              <svg class="mock-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" set:html={row.icon} />
+              {row.dot && <span class:list={['mock-dot', row.dot]} />}
+              <span class="mock-name">{row.name}</span>
+              {row.path && <span class="mock-path">{row.path}</span>}
+              <span class="mock-spacer" />
+              {row.key && <span class="mock-key">{row.key}</span>}
+              {row.submenu && <span class="mock-chevron">›</span>}
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</figure>
