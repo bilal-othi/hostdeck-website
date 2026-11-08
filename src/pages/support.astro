@@ -121,9 +121,9 @@ import { site, url } from '../site';
       <summary>What is HostDeck Pro, and how do I cancel it?</summary>
       <div>
         <p>
-          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, SSH
-          security, cloud import, command templates, Production rules, SSH keys, history and Shortcuts actions.
-          Everything else in HostDeck is free.
+          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, uptime
+          reports, SSH security, cloud import, command templates, Production rules, SSH keys, history and Shortcuts
+          actions. Everything else in HostDeck is free.
         </p>
         <p>
           To manage or cancel it, open the App Store, click your name, then Account Settings › Subscriptions › Manage, or
@@ -164,6 +164,23 @@ import { site, url } from '../site';
           Server Health connects to the hosts you chose to check, and macOS asks before an app connects to devices on
           your local network. Without it, those hosts show “Local Network access is off”, never “down”. You can change it
           in System Settings › Privacy &amp; Security › Local Network.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How do uptime reports work? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          From Server Health’s history, HostDeck makes a report of your checked hosts for last month, this month so far,
+          the last 30 days or dates you choose: for all of them or one folder, with who it’s for and who prepared it if
+          you send it to a client. Save it as a PDF, with a page for each host and its outages, or as CSV files for a
+          spreadsheet. It can also save last month’s report to a folder by itself on the 1st of each month.
+        </p>
+        <p>
+          Uptime is the share of checks a host answered, and an outage lasts from its first failed check to the first
+          answered one. HostDeck checks only while your Mac is awake and online, so every report says how much of the
+          period was monitored, and a sleeping Mac never counts as downtime.
         </p>
       </div>
     </details>
