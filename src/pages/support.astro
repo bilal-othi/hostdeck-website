@@ -25,7 +25,7 @@ import { site, url } from '../site';
         <ul>
           <li>Direct download: <code>~/Library/Application Support/HostDeck/hosts.json</code></li>
           <li>
-            Mac App Store:
+            Mac App Store:{' '}
             <code>~/Library/Containers/net.othi.hostdeck/Data/Library/Application Support/HostDeck/hosts.json</code>
           </li>
         </ul>
@@ -84,8 +84,8 @@ import { site, url } from '../site';
           access to your <code>.ssh</code> folder.
         </p>
         <p>
-          To organise them, add a comment on a line under a <code>Host</code> line: <code># hostdeck.name Folder/Name</code>
-          puts the host in a folder, and <code># hostdeck.environment prod</code> labels it Production.
+          To organise them, add a comment on a line under a <code>Host</code> line: <code># hostdeck.name Folder/Name</code> puts
+          the host in a folder, and <code># hostdeck.environment prod</code> labels it Production.
         </p>
       </div>
     </details>
@@ -135,8 +135,8 @@ import { site, url } from '../site';
       <summary>How do command templates work? (HostDeck Pro)</summary>
       <div>
         <p>
-          Put blanks in a host’s command, such as <code>ssh {'{{'}user{'}}'}@{'{{'}host{'}}'}</code>, or
-          <code>{'{{'}cluster:prod,staging{'}}'}</code> to offer a list. When the host opens, HostDeck asks for the
+          Put blanks in a host’s command, such as <code>ssh {'{{'}user{'}}'}@{'{{'}host{'}}'}</code>,
+          or <code>{'{{'}cluster:prod,staging{'}}'}</code> to offer a list. When the host opens, HostDeck asks for the
           values once, shows the command as it will run, and quotes each value, so it stays one value: it can’t add
           commands or options. Recent values are offered next time; blanks named like a password, secret or token are
           typed hidden and never remembered.
