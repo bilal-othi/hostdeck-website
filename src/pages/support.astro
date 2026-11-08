@@ -121,9 +121,9 @@ import { site, url } from '../site';
       <summary>What is HostDeck Pro, and how do I cancel it?</summary>
       <div>
         <p>
-          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, cloud
-          import, command templates, Production rules, SSH keys, history and Shortcuts actions. Everything else in
-          HostDeck is free.
+          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, SSH
+          security, cloud import, command templates, Production rules, SSH keys, history and Shortcuts actions.
+          Everything else in HostDeck is free.
         </p>
         <p>
           To manage or cancel it, open the App Store, click your name, then Account Settings › Subscriptions › Manage, or
@@ -164,6 +164,24 @@ import { site, url } from '../site';
           Server Health connects to the hosts you chose to check, and macOS asks before an app connects to devices on
           your local network. Without it, those hosts show “Local Network access is off”, never “down”. You can change it
           in System Settings › Privacy &amp; Security › Local Network.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What does SSH security check, and what does it send? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          Once a day, for the SSH hosts that Server Health checks, HostDeck reads what each server shows before login:
+          its version (such as OpenSSH 9.6p1), its host key and the algorithms it offers. Then it says goodbye. It never
+          logs in, and sends no user name, password or key.
+        </p>
+        <p>
+          It compares the host key with your <code>~/.ssh/known_hosts</code> file (in the Mac App Store version, once
+          you allow access to your <code>.ssh</code> folder), or with the key it saw before, and the version with a list
+          of known OpenSSH vulnerabilities that comes with HostDeck. Debian and Ubuntu name their package in the
+          version, so fixes they installed count; on other systems a vulnerable version is shown as possibly affected
+          until you check the server’s updates and ignore it. What it finds stays on your Mac.
         </p>
       </div>
     </details>
