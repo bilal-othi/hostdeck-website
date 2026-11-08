@@ -121,8 +121,9 @@ import { site, url } from '../site';
       <summary>What is HostDeck Pro, and how do I cancel it?</summary>
       <div>
         <p>
-          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, command
-          templates, Production rules, SSH keys, history and Shortcuts actions. Everything else in HostDeck is free.
+          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, cloud
+          import, command templates, Production rules, SSH keys, history and Shortcuts actions. Everything else in
+          HostDeck is free.
         </p>
         <p>
           To manage or cancel it, open the App Store, click your name, then Account Settings › Subscriptions › Manage, or
@@ -163,6 +164,22 @@ import { site, url } from '../site';
           Server Health connects to the hosts you chose to check, and macOS asks before an app connects to devices on
           your local network. Without it, those hosts show “Local Network access is off”, never “down”. You can change it
           in System Settings › Privacy &amp; Security › Local Network.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Which token does cloud import need, and where is it kept? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          A read-only one: HostDeck only lists your servers.
+          For DigitalOcean, a token with the <code>droplet:read</code> scope (and <code>tag:read</code> for tags);
+          for Hetzner Cloud, a project token with Read permission;
+          for Tailscale, an OAuth client with <code>devices:core:read</code> (it never expires) or an API access token.
+        </p>
+        <p>
+          The token stays in the keychain of the Mac you typed it on: never in iCloud Keychain, your hosts file or a
+          backup. HostDeck sends it only to the provider’s own API. Removing the account in Cloud Accounts deletes it.
         </p>
       </div>
     </details>
