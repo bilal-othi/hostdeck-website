@@ -1,0 +1,496 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Screenshot from '../components/Screenshot.astro';
+import { site, url } from '../site';
+
+const chapters = [
+  { id: 'install', title: 'Install and first launch' },
+  { id: 'add', title: 'Add your hosts' },
+  { id: 'open', title: 'Open a host' },
+  { id: 'organise', title: 'Organise your hosts' },
+  { id: 'production', title: 'Production hosts' },
+  { id: 'files', title: 'File transfers' },
+  { id: 'everywhere', title: 'Spotlight, widgets and Focus' },
+  { id: 'settings', title: 'Settings' },
+  { id: 'shortcuts', title: 'Keyboard shortcuts' },
+];
+
+const proChapters = [
+  { id: 'pro', title: 'Getting Pro' },
+  { id: 'workspaces', title: 'Workspaces' },
+  { id: 'health', title: 'Server Health' },
+  { id: 'reports', title: 'Uptime reports' },
+  { id: 'security', title: 'SSH security and keys' },
+  { id: 'cloud', title: 'Cloud import' },
+  { id: 'ai', title: 'On-device AI' },
+  { id: 'templates', title: 'Command templates' },
+  { id: 'rules', title: 'Production rules and log' },
+  { id: 'history', title: 'History' },
+];
+
+const shortcuts: { group: string; rows: [string, string][] }[] = [
+  {
+    group: 'Anywhere on your Mac',
+    rows: [['⌃⌥⌘S', 'Open the HostDeck menu or the Quick Launcher (your choice, and your own shortcut, in Settings › General)']],
+  },
+  {
+    group: 'In the menu',
+    rows: [
+      ['Type', 'Search; Return opens the top result'],
+      ['⌘1 – ⌘9', 'Open your first nine favourites'],
+      ['⌥', 'Hold for a host’s quick actions: browse files, copy, favourite, edit'],
+      ['⌘E', 'Open the HostDeck window'],
+      ['⌘,', 'Settings'],
+    ],
+  },
+  {
+    group: 'In the Quick Launcher',
+    rows: [
+      ['↑ ↓', 'Choose a host'],
+      ['↩', 'Open it'],
+      ['⇥', 'Show its actions'],
+      ['esc', 'Close'],
+    ],
+  },
+  {
+    group: 'In the HostDeck window',
+    rows: [
+      ['⌘N', 'New host'],
+      ['⇧⌘N', 'New folder'],
+      ['⌘F', 'Find'],
+      ['⌘K', 'Quick Launcher'],
+      ['⌘O', 'Open the selected hosts'],
+      ['⌘1 / ⌘2', 'Show hosts as a list or as cards'],
+      ['⌃⌘I', 'Show or hide the inspector'],
+      ['⇧⌘C', 'Copy the host’s address'],
+      ['⌘D', 'Add to or remove from Favourites'],
+      ['⌘Z / ⇧⌘Z', 'Undo and redo'],
+      ['⌘,', 'Settings'],
+    ],
+  },
+];
+---
+
+<Base
+  title="User guide"
+  description="How to install HostDeck, add your hosts, and open them from the menu, the Quick Launcher or the window, with every feature explained step by step."
+>
+  <section class="guide-hero">
+    <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="container" data-reveal>
+      <span class="eyebrow">User guide</span>
+      <h1>Everything HostDeck can do, <span class="gradient-text">step by step.</span></h1>
+      <p class="lede">
+        From the first launch to Server Health and on-device AI. Every screenshot opens full size; the samples use
+        made-up hosts and example addresses.
+      </p>
+    </div>
+  </section>
+
+  <div class="container guide">
+    <nav class="toc" aria-label="Guide contents">
+      <h2>Contents</h2>
+      <ol>
+        {chapters.map((chapter) => <li><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}
+      </ol>
+      <div class="toc-pro">
+        <h2>HostDeck Pro</h2>
+        <ol>
+          {proChapters.map((chapter) => <li><a href={`#${chapter.id}`}>{chapter.title}</a></li>)}
+        </ol>
+      </div>
+    </nav>
+
+    <article class="guide-body">
+      <section class="chapter" id="install">
+        <h2>Install and first launch</h2>
+        <p>HostDeck needs {site.requirements}. It comes in two editions with the same features for your hosts; see the <a href={url('#pro')}>home page</a> for the differences.</p>
+        <ol class="how">
+          <li><strong>Direct download:</strong> open the disk image and drag HostDeck to Applications. <strong>Mac App Store:</strong> install it as any other app.</li>
+          <li>Open HostDeck. It has no Dock icon: it lives in the menu bar, as a small stack of cards.</li>
+          <li>A short welcome shows the hosts HostDeck found, asks which terminal you use, and teaches you the one shortcut to remember.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="welcome-hosts" width={290} alt="Welcome to HostDeck: 16 hosts found, and Import from Shuttle or HostDeck." />
+          <Screenshot name="welcome-terminal" width={290} alt="Your terminal: Terminal or iTerm2." />
+          <Screenshot name="welcome-shortcut" width={290} alt="HostDeck is always at hand: ⌃⌥⌘S opens the Quick Launcher or the menu, and Open HostDeck at login." />
+        </div>
+        <p class="figure-caption">The three welcome steps. Help › Welcome to HostDeck shows them again.</p>
+        <div class="tip">
+          <Icon name="bulb" size={20} />
+          <p>
+            The first time a host opens, macOS asks whether HostDeck may control Terminal or iTerm2: choose <strong>Allow</strong>.
+            If you chose Don’t Allow, Settings › Access › Open Automation Settings… lets you turn it back on.
+          </p>
+        </div>
+        <div class="tip">
+          <Icon name="bulb" size={20} />
+          <p>Can’t see the icon? The menu bar may be full, or the icon hidden behind the camera notch. ⌃⌥⌘S still works.</p>
+        </div>
+      </section>
+
+      <section class="chapter" id="add">
+        <h2>Add your hosts</h2>
+        <p>A host is a name and the command that opens it, usually <code>ssh</code>. There are several ways to fill HostDeck.</p>
+
+        <h3>Add a host by hand</h3>
+        <ol class="how">
+          <li>Open the HostDeck window: Open HostDeck in the menu, or <kbd>⌘E</kbd> while the menu is open.</li>
+          <li>Click <strong>+</strong> in the toolbar, or press <kbd>⌘N</kbd>.</li>
+          <li>Give it a name, keep the type <strong>Terminal command</strong>, and type the command, for example <code>ssh deploy@203.0.113.10</code>.</li>
+          <li>That’s it: changes are saved as you make them, and <kbd>⌘Z</kbd> undoes them.</li>
+        </ol>
+        <p>Make folders with <kbd>⇧⌘N</kbd>, and move a host by choosing its folder in the inspector.</p>
+
+        <h3>Your ~/.ssh/config</h3>
+        <p>
+          Turn on Settings › General › Show hosts from ~/.ssh/config, and every <code>Host</code> entry appears with its
+          real address, Include files and all. (The App Store version asks you to allow access to the folder once.) A
+          comment on a line under the Host line names it, puts it in a folder, or labels it:
+        </p>
+        <pre class="code"><code>Host db-primary
+  HostName 203.0.113.20
+  <span class="c"># hostdeck.name Production/db-primary</span>
+  <span class="c"># hostdeck.environment prod</span></code></pre>
+
+        <h3>Import from Shuttle, iTerm2 or a CSV file</h3>
+        <ul>
+          <li><strong>Shuttle or a HostDeck file:</strong> Import in the welcome, or Settings › Config File. The direct download imports <code>~/.shuttle.json</code> on first launch.</li>
+          <li><strong>iTerm2 profiles:</strong> File › Import Hosts from iTerm2… in the HostDeck window.</li>
+          <li><strong>A CSV file:</strong> File › Import Hosts from CSV…, with a header row naming the columns: <code>name, folder, user, host, port, label, tags</code> (any order; only <code>host</code> is needed).</li>
+          <li><strong>A .hostdeck file</strong> a colleague sent: open it. To send your own, right-click hosts and choose Share…, or a folder and Share Folder….</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="add-hosts" width={480} alt="Add Hosts from a CSV file: four hosts with their labels, folders and commands, each with a checkbox, and Add 4 Hosts." />
+        </div>
+        <p class="figure-caption">Every import shows the hosts and their commands first. Nothing runs until you open a host.</p>
+      </section>
+
+      <section class="chapter" id="open">
+        <h2>Open a host</h2>
+        <p>Three ways in, all with the same hosts, search and favourites.</p>
+
+        <h3>The menu</h3>
+        <ol class="how">
+          <li>Click the HostDeck icon in the menu bar, or press <kbd>⌃⌥⌘S</kbd> in any app.</li>
+          <li>Click a host, or start typing to search and press <kbd>↩</kbd> for the top result.</li>
+          <li>Your first nine favourites are on <kbd>⌘1</kbd> to <kbd>⌘9</kbd>. Hold <kbd>⌥</kbd> to see each host’s quick actions.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="menu" width={340} alt="The HostDeck menu: search, three favourites on ⌘1 to ⌘3, Workspaces, and folders with coloured labels." />
+        </div>
+
+        <h3>The Quick Launcher</h3>
+        <ol class="how">
+          <li>Set your shortcut to open the Quick Launcher (in the welcome, or Settings › General), or press <kbd>⌘K</kbd> in the HostDeck window.</li>
+          <li>Type a few letters: abbreviations such as “pdb” for prod-db and small typos are fine.</li>
+          <li>Press <kbd>↩</kbd> to connect, or <kbd>⇥</kbd> to browse its files, copy its command or address, or edit it.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="launcher" width={460} alt="The Quick Launcher searching for “web”." />
+          <Screenshot name="launcher-actions" width={460} alt="The actions for db-primary: Open, Browse Files (SFTP), Copy Command, Copy Address, Remove from Favourites and Edit." />
+        </div>
+
+        <h3>The HostDeck window</h3>
+        <p>Double-click a host, select it and press <kbd>⌘O</kbd>, or use the Open button. Select several hosts to open them together.</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="main-window" width={640} alt="The HostDeck window with web-01 selected and its inspector on the right." />
+        </div>
+
+        <h3>Quick Connect</h3>
+        <p>
+          Not saved yet? Type <code>user@address</code> or <code>host.example.com:2222</code> into any search, and HostDeck
+          offers to connect straight away. In the menu, Save as a New Host… keeps it.
+        </p>
+        <div class="figure" data-reveal>
+          <Screenshot name="quick-connect" width={460} alt="The Quick Launcher offering to connect to deploy@203.0.113.99." />
+        </div>
+      </section>
+
+      <section class="chapter" id="organise">
+        <h2>Organise your hosts</h2>
+        <p>Select a host to see everything about it in the inspector on the right. Show or hide it with <kbd>⌃⌘I</kbd>.</p>
+        <ul>
+          <li><strong>Favourites:</strong> <kbd>⌘D</kbd>, or Show in Favourites. They lead the menu and fill the widgets.</li>
+          <li><strong>Labels:</strong> Production, Staging or Development, for a host or a whole folder (its hosts use Same as folder).</li>
+          <li><strong>Tags:</strong> type a few, separated by commas. They appear in the sidebar, and <code>#tag</code> finds them in any search.</li>
+          <li><strong>Icons and colours, links and notes:</strong> tell hosts apart at a glance, and keep the dashboards and runbooks that go with them.</li>
+          <li><strong>List or cards:</strong> <kbd>⌘1</kbd> and <kbd>⌘2</kbd>, or the buttons in the toolbar.</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="inspector" width={460} alt="The inspector for web-01: command, terminal options, label, folder, tags, links and a note." />
+          <Screenshot name="main-cards" width={460} alt="Hosts shown as cards." />
+        </div>
+      </section>
+
+      <section class="chapter" id="production">
+        <h2>Production hosts</h2>
+        <p>Give a host or a folder the Production label, and HostDeck checks with you before it opens.</p>
+        <ol class="how">
+          <li>In the inspector, set the host’s (or its folder’s) label to <strong>Production</strong>.</li>
+          <li>In Settings › Production, choose what happens before opening: <strong>Ask to confirm</strong>, <strong>Require Touch ID or password</strong>, or Open without asking.</li>
+          <li>When it asks, <kbd>↩</kbd> and <kbd>esc</kbd> both mean Cancel: only a deliberate click on Open opens it.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="production" width={260} alt="A dialog asking: Open db-primary in Production?" />
+          <Screenshot name="settings-production" width={460} alt="Settings › Production." />
+        </div>
+        <p>Hosts from <code>~/.ssh/config</code> get the label with a <code># hostdeck.environment prod</code> comment.</p>
+      </section>
+
+      <section class="chapter" id="files">
+        <h2>File transfers</h2>
+        <ol class="how">
+          <li>Add a host and set its type to <strong>File transfer</strong>.</li>
+          <li>Choose SFTP, FTPS or FTP, and fill in the server, port, user and folder.</li>
+          <li>Choose the app that opens them in Settings › General › File transfer: FileZilla, Transmit, Cyberduck or ForkLift, or Automatic.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="file-transfer" width={640} alt="A file-transfer host: SFTP to files.acme.example as acme, in /var/www/uploads." />
+        </div>
+        <p>
+          HostDeck never stores passwords: your file-transfer app asks for them. Any SSH host’s files are a click away
+          too, with its Files button or Browse Files.
+        </p>
+      </section>
+
+      <section class="chapter" id="everywhere">
+        <h2>Spotlight, widgets and Focus</h2>
+        <h3>Spotlight and Shortcuts</h3>
+        <p>
+          Type a host’s name in Spotlight to open it. In the Shortcuts app, Open Host and Find Hosts work in your own
+          shortcuts. Only names and addresses are indexed, on your Mac.
+        </p>
+        <h3>Widgets</h3>
+        <p>Right-click the desktop, choose Edit Widgets, and add HostDeck’s Favourites widget in any size.</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="widgets" width={600} alt="Favourites widgets in three sizes, and Server Health widgets." />
+        </div>
+        <h3>Focus filters</h3>
+        <ol class="how">
+          <li>Open System Settings › Focus and choose a Focus, such as Work.</li>
+          <li>Under Focus filters, click Add Filter and choose HostDeck.</li>
+          <li>Pick the folders and labels to show. The menu, the Quick Launcher and the window follow while that Focus is on.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="focus" width={640} alt="The HostDeck window in a Focus that shows only Production, with Show All." />
+        </div>
+        <p>Nothing is moved: Show All brings everything back until the Focus changes.</p>
+      </section>
+
+      <section class="chapter" id="settings">
+        <h2>Settings</h2>
+        <p>Open Settings from the menu, or with <kbd>⌘,</kbd>.</p>
+        <ul>
+          <li><strong>General:</strong> Terminal or iTerm2, new tabs or windows, the profile hosts open with, the file-transfer app, and your global shortcut.</li>
+          <li><strong>Production:</strong> what happens before a Production host opens (and, with Pro, freezes, reasons and the log).</li>
+          <li><strong>Access:</strong> the macOS permissions HostDeck uses, and how to turn them back on.</li>
+          <li><strong>Config File:</strong> where your hosts are saved, import and export, and the automatic backups.</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="settings-general" width={460} alt="Settings › General." />
+          <Screenshot name="settings-access" width={460} alt="Settings › Access: Automation and Accessibility." />
+        </div>
+        <div class="tip">
+          <Icon name="bulb" size={20} />
+          <p>New Terminal tabs need Accessibility access, because Terminal has no command for opening tabs. Until you allow it, hosts open in a new window. iTerm2 doesn’t need it.</p>
+        </div>
+      </section>
+
+      <section class="chapter" id="shortcuts">
+        <h2>Keyboard shortcuts</h2>
+        {
+          shortcuts.map((group) => (
+            <>
+              <h3>{group.group}</h3>
+              <table class="kbd-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Keys</th>
+                    <th scope="col">Does</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.rows.map(([keys, does]) => (
+                    <tr>
+                      <td>
+                        <kbd>{keys}</kbd>
+                      </td>
+                      <td>{does}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ))
+        }
+      </section>
+
+      <section class="chapter" id="pro">
+        <h2>Getting Pro <span class="pro-pill">Pro</span></h2>
+        <p>
+          HostDeck Pro is an optional subscription in the Mac App Store version, with a free trial. Settings › HostDeck
+          Pro shows your plan, what’s included, and Manage Subscription.
+        </p>
+        <div class="figure" data-reveal>
+          <Screenshot name="settings-pro" width={460} alt="Settings › HostDeck Pro: Pro is on, the yearly plan, and the included features." />
+        </div>
+        <p>The Pro pages live in the window’s sidebar under Insights and Cloud.</p>
+      </section>
+
+      <section class="chapter" id="workspaces">
+        <h2>Workspaces <span class="pro-pill">Pro</span></h2>
+        <ol class="how">
+          <li>Select the hosts you open together, right-click, and choose <strong>New Workspace with These Hosts</strong> (or Add to Workspace).</li>
+          <li>Choose how they open: as tabs, as windows, or as iTerm2 split panes.</li>
+          <li>Give it a shortcut if you like, then open it from there, from the menu’s Workspaces, or with Open Workspace.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="workspace" width={640} alt="The workspace Morning checks: opened as tabs, with a shortcut, and three hosts." />
+        </div>
+      </section>
+
+      <section class="chapter" id="health">
+        <h2>Server Health <span class="pro-pill">Pro</span></h2>
+        <ol class="how">
+          <li>In a host’s inspector, turn on <strong>Check this host</strong>; or in a folder’s, <strong>Check every host in this folder</strong> (hosts added later included).</li>
+          <li>Open Server Health in the sidebar: choose how often to check (1, 5 or 15 minutes), notifications, and certificate checks.</li>
+          <li>Select a host to see its uptime per day and connection times. The menu bar icon changes when a host is down.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="health" width={640} alt="Server Health: eight hosts up, with api’s uptime and connection-time charts." />
+        </div>
+        <p>Each check opens the host’s SSH or file-transfer port and closes it again, without logging in.</p>
+
+        <h3>Maintenance windows</h3>
+        <ol class="how">
+          <li>Click <strong>Maintenance…</strong> on the Server Health page, then Add Window….</li>
+          <li>Choose a folder or a host, and a weekly time (such as Sundays 02:00 to 04:00) or a one-off date.</li>
+          <li>During the window, HostDeck keeps checking, but doesn’t alert you, the menu bar doesn’t count those hosts, and reports list their outages as planned.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="maintenance" width={500} alt="Maintenance Windows for Production on Sundays and a one-off for api." />
+        </div>
+        <p>For unplanned work, a host’s or folder’s <strong>Pause Alerts</strong> menu pauses them for 1 hour, 4 hours, or until tomorrow morning.</p>
+      </section>
+
+      <section class="chapter" id="reports">
+        <h2>Uptime reports <span class="pro-pill">Pro</span></h2>
+        <ol class="how">
+          <li>Click <strong>Report…</strong> on the Server Health page.</li>
+          <li>Choose the period and the hosts, and who it’s prepared for and by.</li>
+          <li>Save it as a PDF, or as CSV files. Or let HostDeck save last month’s report on the 1st of each month.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="uptime-sheet" width={300} alt="The uptime report options." />
+          <Screenshot name="uptime-report-1" width={300} alt="An uptime report’s summary page." />
+          <Screenshot name="uptime-report-2" width={300} alt="An uptime report’s page for the host NAS, with its outages." />
+        </div>
+      </section>
+
+      <section class="chapter" id="security">
+        <h2>SSH security and keys <span class="pro-pill">Pro</span></h2>
+        <p>
+          With <strong>Check the SSH servers of checked hosts once a day</strong> on, HostDeck reads what each SSH server
+          shows before login (its version, host key and algorithms) without logging in, and tells you about:
+        </p>
+        <ul>
+          <li>a host key that doesn’t match your <code>known_hosts</code>, with what to check, and the command to run once you know the change is expected;</li>
+          <li>an OpenSSH version with a known vulnerability;</li>
+          <li>weak algorithms worth turning off.</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="ssh-security" width={640} alt="SSH Security: db-primary’s host key changed." />
+        </div>
+        <p>SSH Keys lists the public keys and certificates in <code>~/.ssh</code>, the hosts that use each, the ones worth replacing, and when certificates expire. Private keys are never opened.</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="ssh-keys" width={640} alt="SSH Keys: three keys and the hosts that use them." />
+        </div>
+      </section>
+
+      <section class="chapter" id="cloud">
+        <h2>Cloud import <span class="pro-pill">Pro</span></h2>
+        <ol class="how">
+          <li>Open Cloud Accounts in the sidebar and click <strong>Add Account…</strong>.</li>
+          <li>Choose DigitalOcean, Hetzner Cloud or Tailscale, and paste a read-only API token from the provider’s console.</li>
+          <li>Choose the folder its servers go in, the user they connect as, and how often to refresh.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="cloud-accounts" width={640} alt="Cloud Accounts: DigitalOcean, Hetzner and Tailscale accounts with their hosts." />
+        </div>
+        <p>New servers arrive and removed ones go. Tokens stay in your Mac’s keychain, and requests go from your Mac straight to the provider.</p>
+      </section>
+
+      <section class="chapter" id="ai">
+        <h2>On-device AI <span class="pro-pill">Pro</span></h2>
+        <p>
+          On a Mac with Apple Intelligence turned on (macOS 26 or later), HostDeck uses the model on your Mac: nothing you
+          type leaves it. The AI can be wrong, so HostDeck always shows you its result before anything runs.
+        </p>
+        <h3>Find a host by describing it</h3>
+        <p>Type a description, such as “the main database in production”, in the Quick Launcher or the window’s search, and choose <strong>Find with AI</strong>.</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="launcher-ai" width={460} alt="Find with AI in the Quick Launcher." />
+          <Screenshot name="ai-search" width={420} alt="db-primary found by the on-device AI." />
+        </div>
+        <h3>Write a command from a sentence</h3>
+        <ol class="how">
+          <li>In a host’s inspector, click <strong>Write with AI…</strong> next to its command.</li>
+          <li>Describe what to run and on which servers, for example “tail nginx logs on the web servers”.</li>
+          <li>Check the command and its explanation, then choose Use This Command. Commands that wipe data are refused.</li>
+        </ol>
+        <div class="figure" data-reveal>
+          <Screenshot name="ai-writer" width={520} alt="Write a Command with AI, with the command explained and a warning that it runs as root." />
+        </div>
+        <h3>Understand a command</h3>
+        <p>What This Command Does, in the inspector, explains each part of a host’s command and warns about anything that changes the server.</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="ai-explain" width={560} alt="What This Command Does for the host App logs." />
+        </div>
+      </section>
+
+      <section class="chapter" id="templates">
+        <h2>Command templates <span class="pro-pill">Pro</span></h2>
+        <p>Put blanks in a command with double braces. As the host opens, HostDeck asks for the values:</p>
+        <pre class="code"><code>kubectl --context <span class="s">&#123;&#123;context:acme-prod,acme-staging&#125;&#125;</span> -n <span class="s">&#123;&#123;namespace&#125;&#125;</span> logs -f deploy/<span class="s">&#123;&#123;app:api,web&#125;&#125;</span></code></pre>
+        <ul>
+          <li><code>&#123;&#123;name&#125;&#125;</code> is a blank to type; <code>&#123;&#123;name:a,b&#125;&#125;</code> offers choices.</li>
+          <li>Recent values are offered again, and each value is quoted, so it can’t change the rest of the command.</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="template-form" width={372} alt="The form asking for context, namespace and app, with the finished command below." />
+        </div>
+      </section>
+
+      <section class="chapter" id="rules">
+        <h2>Production rules and log <span class="pro-pill">Pro</span></h2>
+        <p>In Settings › Production:</p>
+        <ul>
+          <li><strong>Change freeze:</strong> at night, at weekends, or on dates you add; during a freeze, warn first or block Production connections.</li>
+          <li><strong>Ask for a reason before opening:</strong> a reason or ticket number for each Production connection.</li>
+          <li><strong>Keep a connection log of</strong> Production hosts or all hosts: Connection Log in the sidebar shows it, and Export… saves it.</li>
+        </ul>
+        <div class="figure" data-reveal>
+          <Screenshot name="connection-log" width={640} alt="The Connection Log with reasons, and a connection blocked by a freeze." />
+        </div>
+      </section>
+
+      <section class="chapter" id="history">
+        <h2>History <span class="pro-pill">Pro</span></h2>
+        <p>History in the sidebar lists earlier versions of your hosts and what changed since each. Select one, then bring back a single host or folder, or the whole version with Restore This Version….</p>
+        <div class="figure" data-reveal>
+          <Screenshot name="history" width={640} alt="History: saved versions and the hosts added since the selected one." />
+        </div>
+      </section>
+
+      <section class="chapter" id="help">
+        <h2>Still stuck?</h2>
+        <p>
+          The <a href={url('support/')}>support page</a> answers the common questions, and you can always
+          <a href={site.supportUrl}>ask on GitHub</a>.
+        </p>
+      </section>
+    </article>
+  </div>
+</Base>

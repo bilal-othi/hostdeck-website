@@ -40,9 +40,9 @@ const image = new URL(url('app-icon.png'), Astro.site);
           <span>HostDeck</span>
         </a>
         <nav aria-label="Main">
-          <a href={url('#features')}>Features</a>
+          <a href={url('#tour')}>Features</a>
+          <a href={url('guide/')}>Guide</a>
           <a href={url('#pro')}>Pro</a>
-          <a href={url('#shuttle')}>Shuttle users</a>
           <a href={url('support/')}>Support</a>
         </nav>
       </div>
@@ -57,6 +57,7 @@ const image = new URL(url('app-icon.png'), Astro.site);
           <span>{site.copyright}</span>
         </div>
         <nav aria-label="Footer">
+          <a href={url('guide/')}>Guide</a>
           <a href={url('privacy/')}>Privacy</a>
           <a href={url('support/')}>Support</a>
           <a href={site.releasesUrl}>Releases</a>
@@ -66,5 +67,17 @@ const image = new URL(url('app-icon.png'), Astro.site);
         </p>
       </div>
     </footer>
+    <dialog class="lightbox" aria-label="Screenshot">
+      <button type="button" class="lightbox-close" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+      <figure>
+        <img alt="" />
+        <figcaption></figcaption>
+      </figure>
+    </dialog>
+    <script>
+      import '../scripts/site.ts';
+    </script>
   </body>
 </html>

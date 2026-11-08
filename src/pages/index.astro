@@ -1,9 +1,39 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
-import MenuMock from '../components/MenuMock.astro';
 import Screenshot from '../components/Screenshot.astro';
 import { site, url } from '../site';
+
+/** The three ways in, shown one after another */
+const ways: { icon: IconName; tab: string; title: string; text: string; shot: string; width: number; alt: string }[] = [
+  {
+    icon: 'command',
+    tab: 'The menu',
+    title: 'One click in the menu bar.',
+    text: 'Click the HostDeck icon, or press ⌃⌥⌘S in any app. Favourites sit at the top on ⌘1 to ⌘9, your workspaces and folders below, each with its coloured label. Start typing to search.',
+    shot: 'menu',
+    width: 380,
+    alt: 'The HostDeck menu: a search field, three Favourites (db-primary, web-01 and api) on ⌘1 to ⌘3, Workspaces, the folders Clients, Home lab, Production and Staging, and Open HostDeck and Settings.',
+  },
+  {
+    icon: 'search',
+    tab: 'Quick Launcher',
+    title: 'Type a few letters, press Return.',
+    text: 'A search panel in the middle of the screen, from your shortcut, or ⌘K in the HostDeck window. It understands abbreviations and small typos, and lists the hosts you use most first. Return connects; Tab shows everything else you can do.',
+    shot: 'launcher',
+    width: 620,
+    alt: 'The Quick Launcher searching for “web”: web-01 and web-02 in Production, then Acme web and Acme pod logs in Clients › Acme, with their addresses.',
+  },
+  {
+    icon: 'window',
+    tab: 'The main window',
+    title: 'All your hosts, organised.',
+    text: 'Folders, labels, tags and workspaces in a sidebar; your hosts as a list or as cards; and an inspector to edit the one you pick. Double-click a host, or press ⌘O, to open it.',
+    shot: 'main-cards',
+    width: 680,
+    alt: 'The HostDeck window showing hosts as cards, each with its icon, colour, address, tags and label, next to a sidebar of workspaces, labels and tags.',
+  },
+];
 
 const features: { icon: IconName; title: string; text: string }[] = [
   {
@@ -14,7 +44,7 @@ const features: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'command',
     title: 'One shortcut, any app',
-    text: 'Open the menu from anywhere with ⌃⌥⌘S, or a shortcut of your own. Your first nine favourites are on ⌘1 to ⌘9.',
+    text: 'Open the menu or the Quick Launcher from anywhere with ⌃⌥⌘S, or a shortcut of your own. Your first nine favourites are on ⌘1 to ⌘9.',
   },
   {
     icon: 'config',
@@ -34,7 +64,7 @@ const features: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'bolt',
     title: 'Quick Connect',
-    text: 'Type pi@192.168.1.20 or host.example.com:2222 into the search to connect straight away, or save it as a host in one step.',
+    text: 'Type pi@192.0.2.20 or host.example.com:2222 into the search to connect straight away, or save it as a host in one step.',
   },
   {
     icon: 'star',
@@ -44,22 +74,12 @@ const features: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'option',
     title: 'Hold ⌥ for more',
-    text: 'Hold Option on any host to copy its command or address, browse its files, add it to Favourites or edit it.',
+    text: 'Hold Option on any host in the menu, or press Tab in the Quick Launcher, to copy its command or address, browse its files, add it to Favourites or edit it.',
   },
   {
     icon: 'terminal',
     title: 'Terminal or iTerm2',
     text: 'Hosts open in the terminal you prefer, in a new tab or window, with the profile and window title you choose (in the App Store version, with its optional Terminal Script).',
-  },
-  {
-    icon: 'window',
-    title: 'A window for all your hosts',
-    text: 'Folders, labels and tags in a sidebar, your hosts as a list or as cards, and an inspector to edit them. The menu bar menu stays the fast way in.',
-  },
-  {
-    icon: 'search',
-    title: 'Quick Launcher',
-    text: 'A search panel in the middle of the screen from your shortcut: type a few letters, press Return, connected. Tab shows a host’s actions.',
   },
   {
     icon: 'tag',
@@ -79,164 +99,468 @@ const features: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'share',
     title: 'Share and import',
-    text: 'Send hosts to a colleague as a .hostdeck file, or bring them in from iTerm2 profiles or a CSV file. Every command is shown before it’s added.',
+    text: 'Send hosts to a colleague as a .hostdeck file, or bring them in from Shuttle, iTerm2 profiles or a CSV file. Every command is shown before it’s added.',
   },
   {
     icon: 'moon',
     title: 'Focus filters',
-    text: 'Choose which folders and labels HostDeck shows in each Focus: only your work hosts in the Work Focus, only your own at home. Nothing is moved, and Show All is a click away.',
+    text: 'Choose which folders and labels HostDeck shows in each Focus: only your work hosts in the Work Focus, only your own at home.',
+  },
+  {
+    icon: 'history',
+    title: 'Undo and backups',
+    text: 'Every change can be undone, and the hosts file is backed up as you go. It stays Shuttle-compatible, so you can still edit it by hand.',
+  },
+  {
+    icon: 'eye',
+    title: 'Made for everyone',
+    text: 'VoiceOver labels, keyboard shortcuts, light and dark appearance, and six languages: English, German, Spanish, French, Japanese and Simplified Chinese.',
   },
 ];
 
-const proFeatures: { icon: IconName; title: string; text: string }[] = [
+/** HostDeck Pro, one screen per feature */
+const pro: {
+  id: string;
+  icon: IconName;
+  tab: string;
+  title: string;
+  text: string;
+  points: string[];
+  shots: { name: string; width: number; alt: string }[];
+}[] = [
   {
+    id: 'workspaces',
     icon: 'layers',
-    title: 'Workspaces',
-    text: 'Open a set of hosts from any folders together, from the menu or with a shortcut of its own: as tabs, windows or iTerm2 split panes (with the Terminal Script).',
+    tab: 'Workspaces',
+    title: 'Your morning checks, in one click.',
+    text: 'A workspace opens a set of hosts from any folders together: from the menu, the main window, or a shortcut of its own.',
+    points: [
+      'Open them as tabs, as windows, or as iTerm2 split panes (with the Terminal Script in the App Store version).',
+      'Each host keeps its own command, profile and label; Production still asks first.',
+    ],
+    shots: [
+      {
+        name: 'workspace',
+        width: 680,
+        alt: 'The workspace “Morning checks”: opened as tabs, with a shortcut, and three hosts (web-01, db-primary and App logs) with their commands.',
+      },
+    ],
   },
   {
+    id: 'health',
     icon: 'heart',
-    title: 'Server Health',
-    text: 'HostDeck checks the hosts you choose and tells you when one goes down or comes back, with uptime charts, notices before certificates expire, and maintenance windows that keep planned work quiet.',
+    tab: 'Server Health',
+    title: 'Know when a server stops answering.',
+    text: 'HostDeck checks the hosts you choose every 1, 5 or 15 minutes, and tells you when one goes down or comes back.',
+    points: [
+      'Each check opens the host’s SSH or file-transfer port and closes it again, without logging in.',
+      'Uptime per day and connection times for each host, and a notice before a certificate expires.',
+      'The menu bar icon changes when a host is down, and Health widgets show it on your desktop.',
+    ],
+    shots: [
+      {
+        name: 'health',
+        width: 680,
+        alt: 'Server Health: eight hosts checked every 5 minutes, all up with their connection times, and for api a chart of uptime per day (96.9%) and connection time over the last 24 hours.',
+      },
+    ],
   },
   {
+    id: 'maintenance',
+    icon: 'wrench',
+    tab: 'Maintenance windows',
+    title: 'Planned work stays quiet.',
+    text: 'Set a weekly window for a folder, or a one-off one for a host. During it, HostDeck keeps checking but doesn’t alert you.',
+    points: [
+      'The menu bar doesn’t count those hosts as down.',
+      'Uptime reports list the outages as planned, not as downtime.',
+      'Or pause a host’s or a folder’s alerts for an hour, four hours, or until tomorrow morning.',
+    ],
+    shots: [
+      {
+        name: 'maintenance',
+        width: 520,
+        alt: 'Maintenance Windows: Production, on Sundays from 02:00 to 04:00 for updates and restarts, and a one-off window for the host api.',
+      },
+    ],
+  },
+  {
+    id: 'uptime',
     icon: 'report',
-    title: 'Uptime reports',
-    text: 'Monthly reports for you or your clients, as PDF or CSV: uptime, outages, downtime and response times per host, saved to a folder by themselves if you like.',
+    tab: 'Uptime reports',
+    title: 'Monthly reports for you, or your clients.',
+    text: 'Uptime, outages, downtime and response times for each host, as a PDF to send or CSV files for a spreadsheet.',
+    points: [
+      'Prepared for a client or team, by you or your company.',
+      'A page for each host, with its outages.',
+      'Saved to a folder of your choice on the 1st of each month, by itself.',
+    ],
+    shots: [
+      {
+        name: 'uptime-sheet',
+        width: 330,
+        alt: 'The uptime report options: last month, all checked hosts (8 hosts, 99.56% uptime), Prepared for and Prepared by, a page per host, and saving a report each month.',
+      },
+      {
+        name: 'uptime-report-2',
+        width: 330,
+        alt: 'A page of an uptime report for the host NAS: 99.78% uptime, 2 outages, 1 h 35 min of downtime, 82 ms response time, with charts per day and the outages listed.',
+      },
+    ],
   },
   {
+    id: 'ssh-security',
     icon: 'lockShield',
-    title: 'SSH security',
-    text: 'Once a day, without logging in, HostDeck checks those servers’ SSH: a host key that changed, an OpenSSH version with a known vulnerability, and weak algorithms to turn off.',
+    tab: 'SSH Security',
+    title: 'Spot a changed host key before you connect.',
+    text: 'Once a day, without logging in, HostDeck reads what each SSH server shows before login: its version, host key and algorithms.',
+    points: [
+      'A host key that no longer matches your known_hosts, with what to check and the command to fix it.',
+      'An OpenSSH version with a known vulnerability, and weak algorithms worth turning off.',
+    ],
+    shots: [
+      {
+        name: 'ssh-security',
+        width: 680,
+        alt: 'SSH Security: eight servers, two needing a look. db-primary’s host key changed and doesn’t match known_hosts; its software has no known vulnerabilities and no weak algorithms.',
+      },
+    ],
   },
   {
-    icon: 'cloud',
-    title: 'Cloud import',
-    text: 'Servers from DigitalOcean, Hetzner Cloud and Tailscale appear by themselves and stay up to date, with their tags as labels. Read-only tokens, kept in your keychain.',
-  },
-  {
-    icon: 'sparkles',
-    title: 'On-device AI',
-    text: 'Find a host by describing it, write a command from a sentence, and see what a command does before it opens. It uses Apple Intelligence on your Mac, so nothing leaves it.',
-  },
-  {
-    icon: 'braces',
-    title: 'Command templates',
-    text: 'Commands with blanks, such as ssh {{user}}@{{host}}: HostDeck asks for the values as the host opens, offers recent ones, and quotes them safely.',
-  },
-  {
-    icon: 'snow',
-    title: 'Production rules',
-    text: 'Change freezes at night, at weekends or on dates you choose, a reason before each Production connection, and a connection log to export.',
-  },
-  {
+    id: 'ssh-keys',
     icon: 'key',
-    title: 'SSH keys',
-    text: 'Your keys and certificates, the hosts that use each one, the ones worth replacing, and when certificates expire. Private keys are never opened.',
+    tab: 'SSH keys',
+    title: 'Every key, and the hosts that use it.',
+    text: 'The public keys and certificates in ~/.ssh, which hosts use each one, the keys worth replacing, and when certificates expire.',
+    points: ['Private keys are never opened.', 'Weak keys, such as RSA keys shorter than 3072 bits, are pointed out.'],
+    shots: [
+      {
+        name: 'ssh-keys',
+        width: 680,
+        alt: 'SSH Keys: three keys (deploy, an ED25519 key; lab, ECDSA; legacy_rsa, RSA 2048) with the hosts that use each and their fingerprints, and a warning that RSA keys shorter than 3072 bits are weak.',
+      },
+    ],
   },
   {
-    icon: 'clock',
-    title: 'History',
-    text: 'Every earlier version of your hosts list and what changed, with one click to bring back a host, a folder or a whole version.',
+    id: 'cloud',
+    icon: 'cloud',
+    tab: 'Cloud import',
+    title: 'Your cloud servers, kept up to date.',
+    text: 'Servers from DigitalOcean, Hetzner Cloud and Tailscale appear in a folder of their own and follow your account: new ones arrive, removed ones go.',
+    points: [
+      'Their tags become labels and tags in HostDeck.',
+      'Read-only tokens are enough. They stay in your Mac’s keychain, and requests go straight to the provider.',
+    ],
+    shots: [
+      {
+        name: 'cloud-accounts',
+        width: 680,
+        alt: 'Cloud Accounts: Acme on DigitalOcean (3 hosts), Hetzner (2 hosts) and a Tailscale tailnet (2 hosts), each refreshed every hour into its own folder.',
+      },
+    ],
   },
   {
-    icon: 'command',
-    title: 'Shortcuts actions',
-    text: 'Open a workspace or a whole folder, and get a host’s status, from the Shortcuts app.',
+    id: 'ai-find',
+    icon: 'sparkles',
+    tab: 'AI: find hosts',
+    title: 'Describe the host you mean.',
+    text: 'Type “the main database in production” and the on-device AI finds the hosts that match, from their names, folders, labels and notes.',
+    points: [
+      'In the Quick Launcher and the main window’s search.',
+      'It uses Apple Intelligence on your Mac: nothing you type leaves it.',
+    ],
+    shots: [
+      {
+        name: 'launcher-ai',
+        width: 620,
+        alt: 'The Quick Launcher with “the main database in production” typed, offering: Find with AI.',
+      },
+      {
+        name: 'ai-search',
+        width: 520,
+        alt: 'The main window listing db-primary as the host that may match “the main database in production”, found by the on-device AI.',
+      },
+    ],
+  },
+  {
+    id: 'ai-write',
+    icon: 'sparkles',
+    tab: 'AI: write commands',
+    title: 'A command from a sentence.',
+    text: 'Say what to run and on which servers. HostDeck writes the ssh command, explains each part, and warns about anything risky.',
+    points: [
+      'Nothing runs until you open the host.',
+      'Commands that wipe data are refused; values the AI can’t know become blanks for you to fill.',
+    ],
+    shots: [
+      {
+        name: 'ai-writer',
+        width: 540,
+        alt: 'Write a Command with AI: “tail nginx logs on the web servers” became an ssh command that offers three hosts, with each part explained and a warning that it runs as root.',
+      },
+    ],
+  },
+  {
+    id: 'ai-explain',
+    icon: 'sparkles',
+    tab: 'AI: explain commands',
+    title: 'See what a command does before it runs.',
+    text: 'What This Command Does, in the inspector: each option and program in plain words, with warnings for commands that can change things on the server.',
+    points: ['Useful for commands a colleague shared, or ones you wrote long ago.'],
+    shots: [
+      {
+        name: 'ai-explain',
+        width: 620,
+        alt: 'The inspector for the host App logs, explaining its command: it connects with SSH, asks for a terminal, shows the app service’s log with sudo and keeps following it.',
+      },
+    ],
+  },
+  {
+    id: 'templates',
+    icon: 'braces',
+    tab: 'Command templates',
+    title: 'Commands with blanks.',
+    text: 'Write a command once with blanks, such as {{namespace}} or {{context:acme-prod,acme-staging}}. HostDeck asks for the values as the host opens.',
+    points: ['Choices become a menu, and recent values are offered again.', 'Each value is quoted, so it can’t change the rest of the command.'],
+    shots: [
+      {
+        name: 'template-form',
+        width: 372,
+        alt: 'A form for the template kubectl --context {{context}} -n {{namespace}} logs -f deploy/{{app}}: acme-prod, web and api chosen, with the finished command below.',
+      },
+    ],
+  },
+  {
+    id: 'production-rules',
+    icon: 'snow',
+    tab: 'Production rules',
+    title: 'Change freezes, reasons and a log.',
+    text: 'Freeze Production at night, at weekends, or on dates you choose; ask for a reason before each Production connection.',
+    points: ['During a freeze, warn first or block the connection.', 'Ticket numbers and reasons go into the connection log.'],
+    shots: [
+      {
+        name: 'settings-production',
+        width: 560,
+        alt: 'Settings › Production: asking to confirm before opening Production hosts, change freezes at night, at weekends or on dates, and the reason and log options.',
+      },
+    ],
+  },
+  {
+    id: 'log',
+    icon: 'list',
+    tab: 'Connection log',
+    title: 'Who opened what, and why.',
+    text: 'Every connection to your Production hosts, or to all of them, with its time, result and reason, ready to export for an audit.',
+    points: ['Connections blocked by a freeze are listed too.'],
+    shots: [
+      {
+        name: 'connection-log',
+        width: 680,
+        alt: 'The Connection Log: hosts opened with reasons such as “Hotfix 2.4.1 rollout” and “Index rebuild, ticket OPS-412”, and one connection to web-02 blocked by a freeze.',
+      },
+    ],
+  },
+  {
+    id: 'history',
+    icon: 'history',
+    tab: 'History',
+    title: 'Every earlier version of your hosts.',
+    text: 'See what changed and when, and bring back a host, a folder or a whole version with one click.',
+    points: ['Versions are kept on your Mac as you work.'],
+    shots: [
+      {
+        name: 'history',
+        width: 680,
+        alt: 'History: four saved versions of the hosts list, and the selected one showing the host Router added since then, with Restore This Version.',
+      },
+    ],
   },
 ];
 ---
 
 <Base>
   <section class="hero">
+    <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="container hero-inner">
-      <div>
-        <img class="hero-icon" src={url('app-icon.png')} alt="HostDeck app icon" width="84" height="84" />
-        <h1>Every server,<br /><span class="gradient-text">one shortcut away.</span></h1>
-        <p class="lede">
-          HostDeck lives in your Mac’s menu bar and keeps your SSH hosts, file-transfer servers and everyday commands one
-          click, or one keystroke, away.
-        </p>
-        <div class="buttons">
-          {
-            site.downloadUrl ? (
-              <a class="button primary" href={site.downloadUrl}>
-                <Icon name="download" size={20} /> Download for Mac
-              </a>
-            ) : (
-              <span class="button primary" aria-disabled="true">
-                <Icon name="download" size={20} /> Coming soon
-              </span>
-            )
-          }
-          {
-            site.appStoreUrl ? (
-              <a class="button secondary" href={site.appStoreUrl}>
-                <Icon name="bag" size={20} /> Mac App Store
-              </a>
-            ) : (
-              <span class="button disabled" aria-disabled="true">
-                <Icon name="bag" size={20} /> Mac App Store, soon
-              </span>
-            )
-          }
-        </div>
-        <p class="fine-print">
-          {site.requirements}. {!site.downloadUrl && <>Watch the <a href={site.releasesUrl}>releases</a> to hear when it’s out.</>}
-        </p>
+      <img class="hero-icon" src={url('app-icon.png')} alt="HostDeck app icon" width="84" height="84" />
+      <h1>Every server,<br /><span class="gradient-text">one shortcut away.</span></h1>
+      <p class="lede">
+        HostDeck lives in your Mac’s menu bar and keeps your SSH hosts, file-transfer servers and everyday commands one
+        click, or one keystroke, away.
+      </p>
+      <div class="buttons">
+        {
+          site.downloadUrl ? (
+            <a class="button primary" href={site.downloadUrl}>
+              <Icon name="download" size={20} /> Download for Mac
+            </a>
+          ) : (
+            <span class="button primary" aria-disabled="true">
+              <Icon name="download" size={20} /> Coming soon
+            </span>
+          )
+        }
+        {
+          site.appStoreUrl ? (
+            <a class="button secondary" href={site.appStoreUrl}>
+              <Icon name="bag" size={20} /> Mac App Store
+            </a>
+          ) : (
+            <a class="button secondary" href={url('guide/')}>
+              <Icon name="book" size={20} /> How it works
+            </a>
+          )
+        }
       </div>
-      <MenuMock />
+      <p class="fine-print">
+        {site.requirements}. {!site.downloadUrl && <>Watch the <a href={site.releasesUrl}>releases</a> to hear when it’s out.</>}
+      </p>
+
+      <div class="stage" data-tilt>
+        <div class="stage-window" data-enter>
+          <Screenshot
+            name="main-window"
+            width={1080}
+            eager
+            alt="The HostDeck window: a sidebar of workspaces, labels and tags, sixteen sample hosts with their addresses, labels and folders, and the inspector for web-01 on the right."
+          />
+        </div>
+        <div class="stage-float stage-launcher" data-enter style="--delay: 0.35s">
+          <Screenshot name="launcher" width={500} zoom={false} eager alt="The Quick Launcher, searching for “web”." />
+        </div>
+        <div class="stage-float stage-menu" data-enter style="--delay: 0.55s">
+          <Screenshot name="menu" width={350} zoom={false} eager alt="The HostDeck menu with Favourites and folders." />
+        </div>
+      </div>
+
+      <ul class="badges" aria-label="In short">
+        <li class="badge"><Icon name="check" size={18} />Free, no account</li>
+        <li class="badge"><Icon name="config" size={18} />Reads your ~/.ssh/config</li>
+        <li class="badge"><Icon name="terminal" size={18} />Terminal and iTerm2</li>
+        <li class="badge"><Icon name="shield" size={18} />Production asks first</li>
+        <li class="badge"><Icon name="eye" size={18} />No tracking</li>
+      </ul>
     </div>
   </section>
 
-  <section class="section" id="tour">
+  <section class="section" id="ways">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Three ways in</span>
+        <h2>Open any host in a second.</h2>
+        <p>Pick whichever suits the moment: they all share the same hosts, search and favourites.</p>
+      </div>
+      <div class="showcase" data-tabs data-autoplay data-reveal>
+        <div class="tabs-list" role="tablist" aria-label="Ways to open a host">
+          {
+            ways.map((way, index) => (
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id={`way-tab-${index}`}
+                aria-controls={`way-${index}`}
+                aria-selected={index === 0 ? 'true' : 'false'}
+                tabindex={index === 0 ? 0 : -1}
+              >
+                <Icon name={way.icon} size={18} />
+                {way.tab}
+                <span class="tab-progress" aria-hidden="true" />
+              </button>
+            ))
+          }
+        </div>
+        {
+          ways.map((way, index) => (
+            <div class="tab-panel showcase-panel" role="tabpanel" id={`way-${index}`} aria-labelledby={`way-tab-${index}`} hidden={index !== 0}>
+              <div class="showcase-media">
+                <Screenshot name={way.shot} width={way.width} alt={way.alt} />
+              </div>
+              <div class="showcase-text">
+                <h3>{way.title}</h3>
+                <p>{way.text}</p>
+                <a class="more" href={url('guide/#open')}>
+                  More in the guide <Icon name="arrow" size={16} />
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="tour">
+    <div class="container">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">A closer look</span>
         <h2>Built for the way you really work.</h2>
-        <p>Real screenshots of HostDeck, filled with sample hosts.</p>
+        <p>Real screenshots of HostDeck, filled with sample hosts. Click any of them to see it full size.</p>
       </div>
 
       <div class="tour">
-        <article class="tour-row">
+        <article class="tour-row wide" data-reveal>
           <div class="tour-media">
-            <Screenshot name="menu" width={300} alt="The HostDeck menu: a search field, three Favourites with ⌘1 to ⌘3, two Recent hosts, and folders for Clients, Home lab, Production and Staging with coloured labels." />
+            <Screenshot
+              name="inspector"
+              width={560}
+              alt="The inspector for web-01: its name, type and command, what the command does, the terminal options, its label and folder, tags, links to Grafana and a runbook, and a note."
+            />
           </div>
           <div class="tour-text">
-            <h3>Every server you use, in one menu.</h3>
+            <h3>Everything about a host, in one place.</h3>
             <p>
-              Click the icon in the menu bar, or press <kbd>⌃⌥⌘S</kbd> in any app. Your favourites sit at the top on{' '}
-              <kbd>⌘1</kbd> to <kbd>⌘9</kbd>, the hosts you just used come next, and everything else lives in folders, with
-              a coloured dot for Production, Staging and Development.
+              Select a host and the inspector shows all of it: the command, the terminal it opens in, its label and
+              folder, and your own notes, links and tags. Edits save as you type, and <kbd>⌘Z</kbd> undoes them.
             </p>
             <ul class="checklist">
-              <li><Icon name="check" size={20} /><span>No more digging through notes for an address, a user name or a port.</span></li>
-              <li><Icon name="check" size={20} /><span>No more retyping long ssh commands: click, and it opens in your terminal.</span></li>
+              <li><Icon name="check" size={20} /><span>Icons and colours so you can tell hosts apart at a glance.</span></li>
+              <li><Icon name="check" size={20} /><span>Links to your dashboards and runbooks, a click from the host.</span></li>
+              <li><Icon name="check" size={20} /><span>Hide the inspector with <kbd>⌃⌘I</kbd> when you want more room.</span></li>
             </ul>
           </div>
         </article>
 
-        <article class="tour-row flip">
+        <article class="tour-row flip" data-reveal>
           <div class="tour-media">
-            <Screenshot name="search" width={300} alt="Searching for prod in HostDeck: four Production hosts listed, the first one highlighted." />
+            <Screenshot
+              name="launcher-actions"
+              width={520}
+              alt="The Quick Launcher showing the actions for db-primary: Open, Browse Files (SFTP), Copy Command, Copy Address, Remove from Favourites and Edit."
+            />
           </div>
           <div class="tour-text">
-            <h3>Type a few letters, press Return.</h3>
+            <h3>Tab for everything else.</h3>
             <p>
-              Search looks at names, folders, addresses and labels. It understands abbreviations (“pdb” finds prod-db),
-              forgives small typos, and lists the hosts you use most first. Type “prod” to see every Production host at
-              once.
-            </p>
-            <p>
-              Not saved yet? Type <code>pi@192.168.1.20</code> or <code>host.example.com:2222</code> and HostDeck offers
-              to connect straight away, or to save it as a host.
+              In the Quick Launcher, <kbd>Tab</kbd> shows what else you can do with the host you picked: browse its
+              files, copy its command or address, add it to Favourites or edit it. In the menu, hold <kbd>⌥</kbd> for the
+              same.
             </p>
           </div>
         </article>
 
-        <article class="tour-row">
+        <article class="tour-row" data-reveal>
           <div class="tour-media">
-            <Screenshot name="production" width={260} alt="A HostDeck dialog asking: Open db-primary in Production? with Open and Cancel buttons; Cancel is the default." />
+            <Screenshot name="quick-connect" width={520} alt="The Quick Launcher with deploy@203.0.113.99 typed, offering to connect to it." />
+          </div>
+          <div class="tour-text">
+            <h3>Not saved yet? Just type it.</h3>
+            <p>
+              Type an address such as <code>deploy@203.0.113.99</code> or <code>host.example.com:2222</code> and HostDeck
+              connects straight away. In the menu, it also offers to save it as a new host.
+            </p>
+          </div>
+        </article>
+
+        <article class="tour-row flip" data-reveal>
+          <div class="tour-media stacked">
+            <Screenshot name="settings-production" width={460} alt="Settings › Production: Production hosts ask to confirm before opening." />
+            <Screenshot
+              class="overlay"
+              name="production"
+              width={260}
+              alt="A HostDeck dialog asking: Open db-primary in Production? with Open and Cancel buttons; Cancel is the default."
+            />
           </div>
           <div class="tour-text">
             <h3>Never open Production by accident.</h3>
@@ -244,48 +568,91 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
               Label a host, or a whole folder, as Production. Before it opens, HostDeck asks, or asks for Touch ID if you
               prefer. Return and Escape both mean Cancel, so muscle memory can’t open it for you.
             </p>
-            <p>Hosts in your <code>~/.ssh/config</code> get labels too, with a one-line comment.</p>
+            <p>
+              Hosts in your <code>~/.ssh/config</code> get labels too, with a one-line comment. With Pro, add change
+              freezes and a reason for every connection.
+            </p>
           </div>
         </article>
 
-        <article class="tour-row wide flip">
+        <article class="tour-row wide" data-reveal>
           <div class="tour-media">
-            <Screenshot name="editor" width={620} alt="The Manage Hosts window: folders of hosts on the left with labels and favourite stars, and the selected host's name, command and options on the right." />
-          </div>
-          <div class="tour-text">
-            <h3>Manage hosts without touching JSON.</h3>
-            <p>
-              Add, edit, move and label hosts in a proper window, with undo. Every change is saved automatically, with
-              backups.
-            </p>
-            <p>
-              The file stays Shuttle-compatible, so you can still edit it by hand, keep it in Dropbox, or share it with
-              your team.
-            </p>
-          </div>
-        </article>
-
-        <article class="tour-row wide">
-          <div class="tour-media stacked">
-            <Screenshot name="file-transfer" width={620} alt="Manage Hosts with a file-transfer host selected: protocol SFTP, server files.example.com, user media, folder /srv/media." />
-            <Screenshot class="overlay" name="quick-actions" width={300} alt="The quick actions of a host: Browse Files (SFTP), Copy Command, Copy Address, Remove from Favourites and Edit." />
+            <Screenshot
+              name="file-transfer"
+              width={620}
+              alt="The file-transfer host Acme uploads: protocol SFTP (over SSH), server files.acme.example, port 22, user acme and folder /var/www/uploads."
+            />
           </div>
           <div class="tour-text">
             <h3>Files, one click away.</h3>
             <p>
               Keep SFTP, FTPS and FTP servers next to your SSH hosts. They open in the app you already use: FileZilla,
-              Transmit, Cyberduck or ForkLift.
+              Transmit, Cyberduck or ForkLift. HostDeck never stores passwords; your file-transfer app asks for them.
             </p>
+            <p>Any SSH host’s files are one click away too, with the Files button or Browse Files.</p>
+          </div>
+        </article>
+
+        <article class="tour-row wide flip" data-reveal>
+          <div class="tour-media">
+            <Screenshot
+              name="focus"
+              width={620}
+              alt="HostDeck in a Focus that shows only Production: five Production hosts listed under the notice “Your Focus shows only Production”, with Show All."
+            />
+          </div>
+          <div class="tour-text">
+            <h3>The right hosts for each Focus.</h3>
             <p>
-              Hold <kbd>⌥</kbd> on any SSH host for its quick actions: browse its files over SFTP, copy its command or
-              address, add it to Favourites or edit it.
+              Add a HostDeck filter to a Focus in System Settings and choose the folders and labels it shows: only your
+              clients’ servers at work, only your home lab in the evening. The menu, the Quick Launcher and the window
+              follow it.
+            </p>
+            <p>Nothing is moved or hidden for good, and Show All is a click away.</p>
+          </div>
+        </article>
+
+        <article class="tour-row wide" data-reveal>
+          <div class="tour-media">
+            <Screenshot
+              name="widgets"
+              width={620}
+              alt="HostDeck widgets in small, medium and large sizes listing favourite hosts, and Server Health widgets saying all 8 hosts are up."
+            />
+          </div>
+          <div class="tour-text">
+            <h3>On your desktop, in Spotlight and Shortcuts.</h3>
+            <p>
+              Put your favourites on the desktop or in Notification Center. Find a host from Spotlight, and use Open Host
+              and Find Hosts in the Shortcuts app. Only names and addresses are indexed, on your Mac.
             </p>
           </div>
         </article>
 
-        <article class="tour-row flip">
+        <article class="tour-row flip" data-reveal>
           <div class="tour-media">
-            <Screenshot name="settings" width={440} alt="HostDeck Settings: open commands with iTerm2 in a new tab, file transfers with FileZilla, the global shortcut, and asking before opening Production hosts." />
+            <Screenshot
+              name="add-hosts"
+              width={480}
+              alt="Add Hosts from a CSV file: four hosts with their labels, folders and ssh commands, each with a checkbox, and Add 4 Hosts."
+            />
+          </div>
+          <div class="tour-text">
+            <h3>Bring your hosts with you.</h3>
+            <p>
+              Import a Shuttle or HostDeck file, iTerm2 profiles or a CSV file, or open a <code>.hostdeck</code> file a
+              colleague sent. You see every host and its command before it’s added, and nothing runs until you open it.
+            </p>
+          </div>
+        </article>
+
+        <article class="tour-row" data-reveal>
+          <div class="tour-media">
+            <Screenshot
+              name="settings-general"
+              width={460}
+              alt="HostDeck Settings › General: commands open in Terminal in a new tab with Terminal’s default profile, and SFTP and FTP hosts open in the automatic choice of app."
+            />
           </div>
           <div class="tour-text">
             <h3>Set it up your way.</h3>
@@ -299,17 +666,17 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
-  <section class="section soft" id="features">
+  <section class="section" id="features">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Features</span>
         <h2>All the details that make it fast.</h2>
         <p>Everything you connect to, organised the way you think about it, and never more than a keystroke away.</p>
       </div>
       <div class="features">
         {
-          features.map((feature) => (
-            <article class="feature">
+          features.map((feature, index) => (
+            <article class="feature" data-reveal style={`--delay: ${(index % 4) * 0.07}s`}>
               <div class="feature-icon">
                 <Icon name={feature.icon} size={22} />
               </div>
@@ -322,9 +689,39 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
+  <section class="section soft" id="start">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Getting started</span>
+        <h2>Ready in under a minute.</h2>
+        <p>The first time it opens, HostDeck walks you through three short steps.</p>
+      </div>
+      <div class="steps">
+        <article class="step-card" data-reveal>
+          <Screenshot name="welcome-hosts" width={340} alt="Welcome to HostDeck: your hosts are found, with a button to import from Shuttle or a HostDeck file." />
+          <h3>Bring your hosts</h3>
+          <p>See the hosts HostDeck found, import a Shuttle or HostDeck file if you have one, or add hosts later.</p>
+        </article>
+        <article class="step-card" data-reveal style="--delay: 0.1s">
+          <Screenshot name="welcome-terminal" width={340} alt="Your terminal: a choice of Terminal or iTerm2." />
+          <h3>Choose your terminal</h3>
+          <p>Terminal or iTerm2. The first time a host opens, macOS asks if HostDeck may use it: choose Allow.</p>
+        </article>
+        <article class="step-card" data-reveal style="--delay: 0.2s">
+          <Screenshot name="welcome-shortcut" width={340} alt="HostDeck is always at hand: ⌃⌥⌘S opens the menu or the Quick Launcher, and HostDeck can open at login." />
+          <h3>Learn one shortcut</h3>
+          <p>⌃⌥⌘S opens the menu or the Quick Launcher from any app. Turn on Open at Login and it’s always ready.</p>
+        </article>
+      </div>
+      <p class="center" data-reveal>
+        <a class="button secondary" href={url('guide/')}><Icon name="book" size={20} /> Read the full guide</a>
+      </p>
+    </div>
+  </section>
+
   <section class="section" id="pro">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">HostDeck Pro</span>
         <h2>For the servers you look after.</h2>
         <p>
@@ -332,38 +729,68 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
           versions.
         </p>
       </div>
-      <div class="features">
+      <div class="pro-gallery" data-tabs data-reveal>
+        <div class="tabs-list" role="tablist" aria-label="HostDeck Pro features" aria-orientation="vertical">
+          {
+            pro.map((feature, index) => (
+              <button
+                type="button"
+                class="tab"
+                role="tab"
+                id={`pro-tab-${feature.id}`}
+                aria-controls={`pro-${feature.id}`}
+                aria-selected={index === 0 ? 'true' : 'false'}
+                tabindex={index === 0 ? 0 : -1}
+              >
+                <Icon name={feature.icon} size={18} />
+                {feature.tab}
+              </button>
+            ))
+          }
+        </div>
         {
-          proFeatures.map((feature) => (
-            <article class="feature">
-              <div class="feature-icon">
-                <Icon name={feature.icon} size={22} />
+          pro.map((feature, index) => (
+            <div class="tab-panel pro-panel" role="tabpanel" id={`pro-${feature.id}`} aria-labelledby={`pro-tab-${feature.id}`} hidden={index !== 0}>
+              <div class="showcase-media">
+                {feature.shots.map((shot) => (
+                  <Screenshot name={shot.name} width={shot.width} alt={shot.alt} />
+                ))}
               </div>
               <h3>{feature.title}</h3>
               <p>{feature.text}</p>
-            </article>
+              <ul class="checklist">
+                {feature.points.map((point) => (
+                  <li>
+                    <Icon name="check" size={20} />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))
         }
       </div>
-      <p class="fine-print">
-        Prices and the trial are shown in the App Store. Manage or cancel the subscription there at any time.
+      <p class="fine-print center">
+        Also in Pro: Shortcuts actions to open a workspace or a folder and to get a host’s status. On-device AI needs a Mac
+        with Apple Intelligence. Prices and the trial are shown in the App Store; manage or cancel the subscription there
+        at any time.
       </p>
     </div>
   </section>
 
-  <section class="section" id="shuttle">
-    <div class="container split">
+  <section class="section soft" id="shuttle">
+    <div class="container split" data-reveal>
       <div>
         <span class="eyebrow">Coming from Shuttle?</span>
         <h2 class="section-title">Your hosts move with you.</h2>
         <p class="lede">
-          HostDeck is inspired by Shuttle, the much-loved SSH menu that is no longer maintained. It reads
-          Shuttle’s config as it is.
+          HostDeck is inspired by Shuttle, the much-loved SSH menu that is no longer maintained. It reads Shuttle’s config
+          as it is.
         </p>
         <ul class="checklist">
           <li><Icon name="check" size={20} /><span>Imports <code>~/.shuttle.json</code> with your folders, themes and shortcut (the direct download does it on first launch).</span></li>
           <li><Icon name="check" size={20} /><span>Keeps the file Shuttle-compatible: edit it in HostDeck or by hand.</span></li>
-          <li><Icon name="check" size={20} /><span>Adds an editor window, so you never have to touch the JSON again.</span></li>
+          <li><Icon name="check" size={20} /><span>Adds a window to manage it all, so you never have to touch the JSON again.</span></li>
         </ul>
       </div>
       <pre class="code" aria-label="An example hosts file"><code><span class="c">// The same file Shuttle reads</span>
@@ -381,29 +808,29 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
-  <section class="section soft">
+  <section class="section">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Privacy</span>
         <h2>Your servers stay your business.</h2>
-        <p>HostDeck works entirely on your Mac. <a href={url('privacy/')}>Read the privacy policy</a>.</p>
+        <p>HostDeck works on your Mac. <a href={url('privacy/')}>Read the privacy policy</a>.</p>
       </div>
       <div class="promises">
-        <div class="promise">
+        <div class="promise" data-reveal>
           <Icon name="user" size={26} />
           <div>
             <h3>No account</h3>
             <p>Nothing to sign up for. Your hosts are a file on your Mac.</p>
           </div>
         </div>
-        <div class="promise">
+        <div class="promise" data-reveal style="--delay: 0.08s">
           <Icon name="eye" size={26} />
           <div>
             <h3>No tracking</h3>
-            <p>No analytics, no advertising, and no network connections of its own.</p>
+            <p>No analytics or advertising, and nothing sent to us. Even the AI runs on your Mac.</p>
           </div>
         </div>
-        <div class="promise">
+        <div class="promise" data-reveal style="--delay: 0.16s">
           <Icon name="key" size={26} />
           <div>
             <h3>No passwords stored</h3>
@@ -414,24 +841,24 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
-  <section class="section">
+  <section class="section soft">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Two editions</span>
         <h2>Pick the one that fits.</h2>
-        <p>Both have the same menu, search, editor and labels. They differ in how they hand commands to your terminal.</p>
+        <p>Both have the same menu, search, window and labels. They differ in how they hand commands to your terminal.</p>
       </div>
       <div class="editions">
-        <article class="edition">
+        <article class="edition" data-reveal>
           <h3><Icon name="bag" size={24} /> Mac App Store</h3>
-          <p class="note">Sandboxed, reviewed by Apple, updated automatically.</p>
+          <p class="note">Sandboxed, reviewed by Apple, updated automatically. HostDeck Pro is available here.</p>
           <ul>
             <li>SSH hosts open in Terminal or iTerm2 right away, as ssh:// links; other commands are copied.</li>
             <li>Attach a Terminal Script in Settings (examples included), and every command runs in your terminal, with your profile and title.</li>
             <li>Reads ~/.ssh/config once you allow it.</li>
           </ul>
         </article>
-        <article class="edition">
+        <article class="edition" data-reveal style="--delay: 0.08s">
           <h3><Icon name="download" size={24} /> Direct download</h3>
           <p class="note">Signed, and notarized by Apple.</p>
           <ul>
@@ -444,11 +871,11 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
     </div>
   </section>
 
-  <section class="cta">
-    <div class="container">
+  <section class="cta-band">
+    <div class="container" data-reveal>
       <img src={url('app-icon.png')} alt="" width="96" height="96" />
       <h2>Ready when your servers are.</h2>
-      <p>{site.requirements}.</p>
+      <p>{site.requirements}. Free to download; Pro is optional.</p>
       <div class="buttons">
         {
           site.downloadUrl ? (
@@ -461,7 +888,7 @@ const proFeatures: { icon: IconName; title: string; text: string }[] = [
             </a>
           )
         }
-        <a class="button secondary" href={url('support/')}>Questions? Support</a>
+        <a class="button secondary" href={url('guide/')}><Icon name="book" size={20} /> Read the guide</a>
       </div>
     </div>
   </section>
