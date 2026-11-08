@@ -51,6 +51,74 @@ const features: { icon: IconName; title: string; text: string }[] = [
     title: 'Terminal or iTerm2',
     text: 'Hosts open in the terminal you prefer, in a new tab or window, with the profile and window title you choose (in the App Store version, with its optional Terminal Script).',
   },
+  {
+    icon: 'window',
+    title: 'A window for all your hosts',
+    text: 'Folders, labels and tags in a sidebar, your hosts as a list or as cards, and an inspector to edit them. The menu bar menu stays the fast way in.',
+  },
+  {
+    icon: 'search',
+    title: 'Quick Launcher',
+    text: 'A search panel in the middle of the screen from your shortcut: type a few letters, press Return, connected. Tab shows a host’s actions.',
+  },
+  {
+    icon: 'tag',
+    title: 'Icons, colours, notes and tags',
+    text: 'Give each host an icon or a colour, keep notes and links with it, and find it again by #tag.',
+  },
+  {
+    icon: 'bolt',
+    title: 'Spotlight and Shortcuts',
+    text: 'Find and open your hosts from Spotlight, and from the Shortcuts app with Open Host and Find Hosts. Only names and addresses are indexed, on your Mac.',
+  },
+  {
+    icon: 'widget',
+    title: 'Desktop widgets',
+    text: 'Your favourites on the desktop or in Notification Center, each one a click from connecting.',
+  },
+  {
+    icon: 'share',
+    title: 'Share and import',
+    text: 'Send hosts to a colleague as a .hostdeck file, or bring them in from iTerm2 profiles or a CSV file. Every command is shown before it’s added.',
+  },
+];
+
+const proFeatures: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'layers',
+    title: 'Workspaces',
+    text: 'Open a set of hosts from any folders together, as tabs, windows or iTerm2 split panes, from the menu or with a shortcut of its own.',
+  },
+  {
+    icon: 'heart',
+    title: 'Server Health',
+    text: 'HostDeck checks the hosts you choose and tells you when one goes down or comes back, with uptime charts and notices before certificates expire.',
+  },
+  {
+    icon: 'braces',
+    title: 'Command templates',
+    text: 'Commands with blanks, such as ssh {{user}}@{{host}}: HostDeck asks for the values as the host opens, offers recent ones, and quotes them safely.',
+  },
+  {
+    icon: 'snow',
+    title: 'Production rules',
+    text: 'Change freezes at night, at weekends or on dates you choose, a reason before each Production connection, and a connection log to export.',
+  },
+  {
+    icon: 'key',
+    title: 'SSH keys',
+    text: 'Your keys and certificates, the hosts that use each one, the ones worth replacing, and when certificates expire. Private keys are never opened.',
+  },
+  {
+    icon: 'clock',
+    title: 'History',
+    text: 'Every earlier version of your hosts list and what changed, with one click to bring back a host, a folder or a whole version.',
+  },
+  {
+    icon: 'command',
+    title: 'Shortcuts actions',
+    text: 'Open a workspace or a whole folder, and get a host’s status, from the Shortcuts app.',
+  },
 ];
 ---
 
@@ -226,6 +294,35 @@ const features: { icon: IconName; title: string; text: string }[] = [
           ))
         }
       </div>
+    </div>
+  </section>
+
+  <section class="section" id="pro">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">HostDeck Pro</span>
+        <h2>For the servers you look after.</h2>
+        <p>
+          An optional subscription in the Mac App Store version, with a free trial. Everything above stays free, in both
+          versions.
+        </p>
+      </div>
+      <div class="features">
+        {
+          proFeatures.map((feature) => (
+            <article class="feature">
+              <div class="feature-icon">
+                <Icon name={feature.icon} size={22} />
+              </div>
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="fine-print">
+        Prices and the trial are shown in the App Store. Manage or cancel the subscription there at any time.
+      </p>
     </div>
   </section>
 

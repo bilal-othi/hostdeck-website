@@ -118,6 +118,56 @@ import { site, url } from '../site';
     </details>
 
     <details>
+      <summary>What is HostDeck Pro, and how do I cancel it?</summary>
+      <div>
+        <p>
+          An optional subscription in the Mac App Store version, with a free trial: workspaces, server health, command
+          templates, Production rules, SSH keys, history and Shortcuts actions. Everything else in HostDeck is free.
+        </p>
+        <p>
+          To manage or cancel it, open the App Store, click your name, then Account Settings › Subscriptions › Manage, or
+          choose Manage Subscription in HostDeck’s Settings › HostDeck Pro. It ends at the end of the period you paid for.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>How do command templates work? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          Put blanks in a host’s command, such as <code>ssh {'{{'}user{'}}'}@{'{{'}host{'}}'}</code>, or
+          <code>{'{{'}cluster:prod,staging{'}}'}</code> to offer a list. When the host opens, HostDeck asks for the
+          values once, shows the command as it will run, and quotes each value, so it stays one value: it can’t add
+          commands or options. Recent values are offered next time; blanks named like a password, secret or token are
+          typed hidden and never remembered.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What does the connection log keep? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          Nothing until you turn it on in Settings › Production. Then, for Production hosts (or all hosts), the time, the
+          host’s name and label, its saved command, the reason you typed, and whether it opened, was cancelled or was
+          blocked by a change freeze. It’s a file next to your hosts file (<code>Connections/log.csv</code>), on your Mac
+          only. Insights › Connection Log shows it, exports it as CSV and clears it.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Why does HostDeck ask for Local Network access? (HostDeck Pro)</summary>
+      <div>
+        <p>
+          Server Health connects to the hosts you chose to check, and macOS asks before an app connects to devices on
+          your local network. Without it, those hosts show “Local Network access is off”, never “down”. You can change it
+          in System Settings › Privacy &amp; Security › Local Network.
+        </p>
+      </div>
+    </details>
+
+    <details>
       <summary>Does HostDeck store my passwords?</summary>
       <div>
         <p>
