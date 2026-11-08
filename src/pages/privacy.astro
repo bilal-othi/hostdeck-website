@@ -3,7 +3,7 @@ import Prose from '../layouts/Prose.astro';
 import { site } from '../site';
 ---
 
-<Prose title="Privacy Policy" description="HostDeck doesn't collect, store or share any personal data." updated="2 November 2026">
+<Prose title="Privacy Policy" description="HostDeck doesn't collect, store or share any personal data." updated="8 November 2026">
   <p><strong>HostDeck does not collect, store or share any personal data.</strong> This applies to both editions: the Mac App Store version and the direct download.</p>
 
   <h2>The app</h2>
@@ -15,10 +15,15 @@ import { site } from '../site';
     </li>
     <li>
       <strong>Local data only.</strong> Your hosts, settings and global shortcut are stored on your Mac in HostDeck’s
-      Application Support folder, with earlier versions of your hosts list (Backups, and History for HostDeck Pro) kept
-      there for up to 90 days. Recently used commands, how often you use them (to rank search results), a few display
+      Application Support folder, with earlier versions of your hosts list (Backups) kept there for up to 90 days. Recently used commands, how often you use them (to rank search results), a few display
       choices and, if you grant it, access to your <code>.ssh</code> folder are remembered in HostDeck’s preferences on
       your Mac. None of it leaves your Mac.
+    </li>
+    <li>
+      <strong>Spotlight and widgets, on your Mac.</strong> HostDeck adds your saved hosts’ names, folders, labels,
+      addresses and tags (never their commands) to Spotlight on your Mac, so you can find them there; Settings › General
+      turns this off and removes them. For its widgets, HostDeck keeps your first favourites’ names, icons and labels in
+      a file only HostDeck and its widgets can read. Neither leaves your Mac.
     </li>
     <li>
       <strong>No passwords.</strong> HostDeck never asks for, stores or sends passwords. SSH sign-in is handled by ssh and
@@ -27,8 +32,15 @@ import { site } from '../site';
     <li>
       <strong>Files you choose.</strong> HostDeck reads <code>~/.ssh/config</code> (and the files it includes) to list
       your SSH hosts and to work out where “Browse Files” connects. The Mac App Store version only does so after you
-      allow access to your <code>.ssh</code> folder. HostDeck only imports or exports config files you pick in an Open
-      or Save dialog.
+      allow access to your <code>.ssh</code> folder. HostDeck only imports or exports files you pick in an Open or Save
+      dialog (hosts files, iTerm2 profiles, CSV files), except that the direct download, the first time it opens,
+      starts from your Shuttle hosts file (<code>~/.shuttle.json</code>) if you have one.
+    </li>
+    <li>
+      <strong>Sharing.</strong> When you share hosts, HostDeck makes a <code>.hostdeck</code> file with their names,
+      commands, folders, labels, icons, tags and links (never a password written in a link, never your favourites, and
+      notes only if you choose) and hands it to the way of sharing you pick. A <code>.hostdeck</code> file you open is
+      shown in full before anything is added.
     </li>
     <li>
       <strong>Opening commands.</strong> HostDeck only acts on the command you choose from its menu. The Mac App Store
